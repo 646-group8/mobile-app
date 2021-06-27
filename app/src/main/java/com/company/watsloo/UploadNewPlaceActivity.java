@@ -83,6 +83,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     }
 
     public void takePicture(View v){
+        Toast.makeText(this, "Return a Thumbnail of Picture", Toast.LENGTH_LONG).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -122,6 +123,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
 
     public void dispatchTakePictureIntent(View v) {
+        Toast.makeText(this, "Return a full picture", Toast.LENGTH_LONG).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
             photoFile = getPhotoFile(FILE_NAME);
