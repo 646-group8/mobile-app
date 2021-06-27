@@ -15,4 +15,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/but_goto_upload_activity"
+        android:onClick="gotoUploadNewPlaceActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload a new Place"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
