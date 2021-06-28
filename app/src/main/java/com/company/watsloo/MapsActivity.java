@@ -59,12 +59,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             isr.close();
 
             for(int i=0;i<nums.size()/2;i++){
-                latlngs.add(new LatLng((Double)nums.get(2*i), (Double)nums.get(2*i+1)));
+                Double lng=(Double)nums.get(2*i),lat=(Double)nums.get(2*i+1);
+                if(lng==0&&lat==0){ //start a new polygon
+                    Polygon polygon1 = mMap.addPolygon(new PolygonOptions()
+                            .clickable(true)
+                            .addAll(latlngs)
+                            .addHole(latlngs));
+                    latlngs.clear();
+                }
+                else{ //add latlng to current polygon
+                    latlngs.add(new LatLng(lat,lng));
+                }
             }
-            Polygon polygon1 = mMap.addPolygon(new PolygonOptions()
-                    .clickable(true)
-                    .addAll(latlngs)
-                    .addHole(latlngs));
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
