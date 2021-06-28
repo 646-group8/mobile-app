@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class UploadNewPlaceActivity extends AppCompatActivity {
     Button albumBtn, cameraBtn, submitBtn;
@@ -161,6 +164,25 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                 storageDir
         );
         return image;
+    }
+
+    public void sendMessage(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+
+        EditText editTextEmail = (EditText) findViewById(R.id.editTextTextEmailAddress);
+        String emailAddress = editTextEmail.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, emailAddress);
+
+        EditText editTextDes = (EditText) findViewById(R.id.eidtTextPlaceDes);
+        String Description = editTextDes.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, Description);
+
+        ImageView inputImage = (ImageView) findViewById(R.id.newPlaceImageView);
+        inputImage.buildDrawingCache();
+        Bitmap bitmapImage = inputImage.getDrawingCache();
+        intent.putExtra(EXTRA_MESSAGE, bitmapImage);
+
+        startActivity(intent);
     }
 
 

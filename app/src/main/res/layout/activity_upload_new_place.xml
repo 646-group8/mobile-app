@@ -30,12 +30,12 @@
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/eidtTextPlaceDisc"
+        android:id="@+id/eidtTextPlaceDes"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:layout_weight="5"
-        android:hint="Please input your Diescription here"
+        android:hint="Please input your Description here"
         android:inputType="textMultiLine" />
 
 
@@ -78,6 +78,7 @@
 
 
     <Button
+        android:onClick="sendMessage"
         android:id="@+id/button_submit_new_place"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
