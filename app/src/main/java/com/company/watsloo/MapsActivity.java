@@ -47,7 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ArrayList latlngs=new ArrayList();
             ArrayList nums=new ArrayList();
             InputStream is =getResources().openRawResource(R.raw.coordinates);
-            InputStreamReader isr;//指定编码格式
+            InputStreamReader isr;
             isr = new InputStreamReader(is, StandardCharsets.UTF_8);
 
             BufferedReader bfr = new BufferedReader(isr);
@@ -99,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMarkerClickListener(this::onMarkerClick);
         mMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
-        // Add a marker in Sydney and move the camera
+        // Add a marker in Waterloo and move the camera
         LatLng loo = new LatLng(43.4723,-80.5449),mc=new LatLng(43.47207511,-80.54394739);
         Marker loo_mark=mMap.addMarker(new MarkerOptions().position(loo).title("Marker in Loo").snippet("Click to get more info"));
         Marker mc_mark=mMap.addMarker(new MarkerOptions().position(mc).title("Mathematics & Computer Building").snippet("Click to get more info"));
