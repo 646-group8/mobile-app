@@ -7,14 +7,24 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpotActivity extends AppCompatActivity {
 
     private TextView spot_title;
     private TextView spot_content;
+    private ListView listView;
+    ArrayList<String> story_list = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,12 +35,29 @@ public class SpotActivity extends AppCompatActivity {
         spot_title.setText(title);
 
         // spot stories
-        //setContentView(R.layout.activity_spot);
-        spot_content= findViewById(R.id.spotContent);
-        String content = "Story1' tilte\nStory2's title\ntest";
-        spot_content.setText(content);
-        spot_content.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        spot_content = findViewById(R.id.spotContent);
+//        String content = "Story1' tilte\nStory2's title\ntest";
+//        spot_content.setText(content);
+//        spot_content.setMovementMethod(ScrollingMovementMethod.getInstance());
 
+
+        story_list.add("story1");
+        story_list.add("story2"); // 后续取数据库数据
+        listView = findViewById(R.id.spotList);
+        ArrayAdapter<String> adapter = new ArrayAdapter( this,R.layout.support_simple_spinner_dropdown_item,story_list);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public  void  onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                Intent intentDetail = new Intent();
+                intentDetail.setClass(SpotActivity.this, DetailActivity.class);
+                startActivity(intentDetail);
+            }
+
+        });
 
 
         //button :submit story/take pictures->文哥
@@ -61,4 +88,4 @@ public class SpotActivity extends AppCompatActivity {
 
 
 
-    }
+}
