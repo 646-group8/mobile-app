@@ -23,6 +23,15 @@ public class Item {
         images = new ArrayList<>();
     }
 
+    public Item(String name, double latitude, double longitude, String description,
+                List<String> stories) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.stories = stories;
+    }
+
     public String getName() {
         return name;
     }
