@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.company.watsloo.data.DataOperation;
+import com.company.watsloo.data.Item;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -15,11 +17,6 @@ import com.google.firebase.storage.StorageReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase database;
-    DatabaseReference reference;
-    FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
-
     private Button buttonUpload;
 
     @Override
@@ -27,23 +24,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference();
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
-
         buttonUpload = findViewById(R.id.button_upload);
+
+        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
+                "A hall in UWaterloo");
 
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reference.child("item").setValue(1).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(MainActivity.this,
-                                "Successfully add data!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                DataOperation.addItem(MainActivity.this, testItem1);
             }
         });
     }
