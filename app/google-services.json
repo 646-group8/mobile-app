@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "979053493814",
+    "firebase_url": "https://watsloo-d5415-default-rtdb.firebaseio.com",
+    "project_id": "watsloo-d5415",
+    "storage_bucket": "watsloo-d5415.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979053493814:android:7662a8dae2227c13caa297",
+        "android_client_info": {
+          "package_name": "com.company.watsloo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979053493814-qos8r9me6egbhsfuu87i0j7sjecp1a7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdsdogJnhB3k7Ww92zmO7RHZp03B1vuwM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979053493814-qos8r9me6egbhsfuu87i0j7sjecp1a7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
