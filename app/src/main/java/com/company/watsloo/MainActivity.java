@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String PROJ_PATH = System.getProperty("user.dir");
 
     private Button buttonUpload;
-    private ImageView image1;
-    private ImageView image2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         buttonUpload = findViewById(R.id.button_upload);
-        image1 = findViewById(R.id.imageView);
-        image2 = findViewById(R.id.imageView2);
 
         Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
                 "A hall in UWaterloo");
