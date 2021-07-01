@@ -1,6 +1,6 @@
 package com.company.watsloo.data;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class Item {
     private double longitude;
     private String description;
     private List<String> stories;
-    private List<Image> images;
+    private List<Bitmap> bitmaps;
 
     public Item(String name, double latitude, double longitude, String description) {
         this.name = name;
@@ -20,7 +20,7 @@ public class Item {
         this.longitude = longitude;
         this.description = description;
         stories = new ArrayList<>();
-        images = new ArrayList<>();
+        bitmaps = new ArrayList<>();
     }
 
     public Item(String name, double latitude, double longitude, String description,
@@ -30,6 +30,7 @@ public class Item {
         this.longitude = longitude;
         this.description = description;
         this.stories = stories;
+        bitmaps = new ArrayList<>();
     }
 
     public String getName() {
@@ -52,7 +53,7 @@ public class Item {
         return stories;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public List<Bitmap> getBitmaps() {
+        return bitmaps;
     }
 }

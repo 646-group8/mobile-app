@@ -2,23 +2,21 @@ package com.company.watsloo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String PROJ_PATH = System.getProperty("user.dir");
 
     private Button buttonUpload;
 
@@ -43,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         Item testItem2 = new Item("Hagey Hall 2", 43.468866, -80.541278,
                 "A hall in UWaterloo 2", stories2);
 
+        String imagePath = "/home/xuzishuo1996/Desktop/mobile-app/app/src/main/java/com/company/watsloo/data/";
+        String path1 = imagePath + "ic_launcher_round.bmp";
+        String path2 = imagePath + "ic_launcher.bmp";
+        Bitmap bitmap1 = BitmapFactory.decodeFile(path1);
+        Bitmap bitmap2 = BitmapFactory.decodeFile(path2);
 
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
 //                DataOperation.addItem(MainActivity.this, testItem1);
 //                DataOperation.addStories(MainActivity.this, "Hagey Hall", stories);
 
-                DataOperation.addItem(MainActivity.this, testItem2);
+//                DataOperation.addItem(MainActivity.this, testItem2);
+//                DataOperation.addStories(MainActivity.this, "Hagey Hall 2", stories);
+
+                DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bitmap1);
+                DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bitmap2);
             }
         });
     }
