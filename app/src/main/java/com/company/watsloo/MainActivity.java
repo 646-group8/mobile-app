@@ -2,15 +2,22 @@ package com.company.watsloo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String PROJ_PATH = System.getProperty("user.dir");
 
     private Button buttonUpload;
+    private ImageView image1;
+    private ImageView image2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         buttonUpload = findViewById(R.id.button_upload);
+        image1 = findViewById(R.id.imageView);
+        image2 = findViewById(R.id.imageView2);
 
         Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
                 "A hall in UWaterloo");
@@ -41,11 +52,17 @@ public class MainActivity extends AppCompatActivity {
         Item testItem2 = new Item("Hagey Hall 2", 43.468866, -80.541278,
                 "A hall in UWaterloo 2", stories2);
 
-        String imagePath = "/home/xuzishuo1996/Desktop/mobile-app/app/src/main/java/com/company/watsloo/data/";
-        String path1 = imagePath + "ic_launcher_round.bmp";
-        String path2 = imagePath + "ic_launcher.bmp";
-        Bitmap bitmap1 = BitmapFactory.decodeFile(path1);
-        Bitmap bitmap2 = BitmapFactory.decodeFile(path2);
+//        Bitmap bitmap1 = BitmapFactory.decodeResource(
+//                MainActivity.this.getResources(), R.drawable.ic_launcher_foreground);
+//        Bitmap bitmap2 = BitmapFactory.decodeResource(
+//                MainActivity.this.getResources(), R.drawable.ic_launcher_background);
+//        Resources r = MainActivity.this.getResources();
+//        @SuppressLint("ResourceType") InputStream is1 = r.openRawResource(R.drawable.ic_launcher_foreground);
+//        BitmapDrawable bmpDraw1 = new BitmapDrawable(is1);
+//        Bitmap bmp1 = bmpDraw1.getBitmap();
+        Resources res = getResources();
+        Bitmap bmp1 = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_text_light_normal_background);
+        Bitmap bmp2 = BitmapFactory.decodeResource(res, R.drawable.common_full_open_on_phone);
 
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
 //                DataOperation.addItem(MainActivity.this, testItem2);
 //                DataOperation.addStories(MainActivity.this, "Hagey Hall 2", stories);
 
-                DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bitmap1);
-                DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bitmap2);
+                try {
+                    DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bmp2);
+                    DataOperation.addBitmap(MainActivity.this, "Hagey Hall 2", bmp1);
+                } catch (IOException e) {
+                    // exception handling
+                }
+
             }
         });
     }

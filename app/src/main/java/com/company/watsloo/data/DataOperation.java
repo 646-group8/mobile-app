@@ -19,6 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +107,7 @@ public class DataOperation {
     }
 
     // ref: https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
-    public static void addBitmap(Context context, String itemName, Bitmap bitmap) {
+    public static void addBitmap(Context context, String itemName, Bitmap bitmap) throws IOException {
         UUID randomId = UUID.randomUUID();
         String bitmapName = itemName + "/" + randomId + ".bmp";
         StorageReference bitmapRef = storageRef.child(bitmapName);
@@ -114,6 +115,8 @@ public class DataOperation {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
+        baos.flush();
+        baos.close();
 
         UploadTask uploadTask = bitmapRef.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
