@@ -16,17 +16,27 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    for firebase test, ignore-->
+<!--    <Button-->
+<!--        android:id="@+id/button_upload"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="158dp"-->
+<!--        android:layout_marginTop="200dp"-->
+<!--        android:layout_marginEnd="160dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Upload"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView" />-->
     <Button
-        android:id="@+id/button_upload"
+        android:id="@+id/but_goto_upload_activity"
+        android:onClick="gotoUploadNewPlaceActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="158dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="160dp"
-        android:gravity="center"
-        android:text="Upload"
+        android:text="Upload a new Place"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
