@@ -2,6 +2,7 @@ package com.company.watsloo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,7 +13,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,12 +52,13 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
     Button albumBtn, cameraBtn, submitBtn;
     ImageView imageView;
-    TextView textView_lat, textView_lon;
+    EditText textView_lat, textView_lon;
     private final static int SELECT_PHOTOT_FROM_ALBUM = 250;
     private final static int REQUEST_IMAGE_CAPTURE   = 520;
     private final static int REQUEST_FULL_CAMERA_IMAGE   = 100;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 3;
     private static final int PERMISSION_FINE_LOCATION = 99;
+    private static final int PERMISSION_EXIF_LOCATION = 98;
     private static final int PERMISSION_GRANTED = 101;
     private String FILE_NAME="photo.jpg";
     private File photoFile;
@@ -74,7 +79,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         // initialize all the btns, and editText, and imageView;
         imageView = findViewById(R.id.newPlaceImageView);
         albumBtn = findViewById(R.id.button_choose_from_album);
-        cameraBtn = findViewById(R.id.button_choose_from_camera);
+//        cameraBtn = findViewById(R.id.button_choose_from_camera);
         submitBtn = findViewById(R.id.button_submit_new_place);
         textView_lat = findViewById(R.id.tx_lat);
         textView_lon = findViewById(R.id.tx_lon);
@@ -100,54 +105,36 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
 
 
-    // Get the permission of Camera
-    public boolean checkPermissionForCamera(){
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    // Check the permission of Camera
+//    public boolean checkPermissionForCamera(){
+//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+//        if (result == PackageManager.PERMISSION_GRANTED){
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    // Check the permission of GPS
+//    public boolean checkPermissionForGPS(){
+//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+//        if (result == PackageManager.PERMISSION_GRANTED){
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//
+//    public void takePicture(View v){
+//        Toast.makeText(this, "Return a Thumbnail of Picture", Toast.LENGTH_LONG).show();
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
+//    }
 
-    // Get the permission of GPS
-    public boolean checkPermissionForGPS(){
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (result == PackageManager.PERMISSION_GRANTED){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void requestPermissionForCamera(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)){
-            Toast.makeText(this, "Camera permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},CAMERA_PERMISSION_REQUEST_CODE);
-            updateGPS();
-        }
-    }
-
-    public void requestPermissionForGPS(){
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-            Toast.makeText(this, "GPS permission needed. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION},PERMISSION_FINE_LOCATION);
-            updateGPS();
-        }
-    }
-
-
-
-    public void takePicture(View v){
-        Toast.makeText(this, "Return a Thumbnail of Picture", Toast.LENGTH_LONG).show();
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -162,20 +149,79 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), photoFile.toString(), Toast.LENGTH_LONG).show();
             Bitmap imageBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
             imageView.setImageBitmap(imageBitmap);
+            // update GPS information after a picture is taken
+            updateGPS();
+            textView_lat.setTextColor(Color.BLACK);
+            textView_lon.setTextColor(Color.BLACK);
         }
 
-        // if the user select a image from the album
+        // if the user select a image from the album, only support to API 24, current is API 23;
+//        https://stackoverflow.com/questions/34696787/a-final-answer-on-how-to-get-exif-data-from-uri
+        // Dangerous permission after API23: https://stackoverflow.com/questions/32635704/android-permission-doesnt-work-even-if-i-have-declared-it
+
         if (requestCode == SELECT_PHOTOT_FROM_ALBUM && resultCode == RESULT_OK){
             Uri selectedImage = data.getData(); // get the Uri of the selected picture from the album;
-            try {
+
+            String selectedImagestring = selectedImage.toString();
+
+            try (InputStream inputStream = getContentResolver().openInputStream(selectedImage)) {
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
                 imageView.setImageBitmap(imageBitmap); // get the bitmap of the picture, and set the image above
-            } catch (FileNotFoundException e) {
+                ExifInterface exifInterface = new ExifInterface(inputStream);
+
+
+
+                String lat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                String log = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                if (lat!=null){
+                textView_lat.setText(String.valueOf(covertRationalGPS2DecimalGPS(lat)));
+                textView_lon.setText(String.valueOf(covertRationalGPS2DecimalGPS(log)));
+                textView_lat.setTextColor(Color.BLUE);
+                textView_lon.setTextColor(Color.BLUE);
+                } else{
+                    Toast.makeText(this, "Please manually input the GPS information for this picture", Toast.LENGTH_LONG).show();
+                    textView_lat.setText("None");
+                    textView_lon.setText("None");
+                    textView_lat.setTextColor(Color.RED);
+                    textView_lon.setTextColor(Color.RED);
+                }
+
+            } catch (IOException  e) {
                 e.printStackTrace();
             }
 
         }
+    }
 
+    // Convert the rational GPS information into the decimal gps information
+    private Float covertRationalGPS2DecimalGPS(String gpsinput){
+        String[] gpsList  = gpsinput.replace("/", ",").split(",");
+
+        Float gpsD =0f;
+
+        Float gpsM =0f;
+
+        Float gpsS =0f;
+
+        if (gpsList.length >=2) {
+
+            gpsD = Float.parseFloat(gpsList[0]) / Float.parseFloat(gpsList[1]);
+
+        }
+
+        if (gpsList.length >=4) {
+
+            gpsM = Float.parseFloat(gpsList[2]) / Float.parseFloat(gpsList[3]);
+
+        }
+
+        if (gpsList.length >=6) {
+
+            gpsS = Float.parseFloat(gpsList[4]) / Float.parseFloat(gpsList[5]);
+
+        }
+
+        return  gpsD + gpsM /60 + gpsS /3600;
     }
 
 
@@ -272,23 +318,6 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         }
 
         switch (requestCode){
-//            case PERMISSION_FINE_LOCATION:
-//                if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
-//                    updateGPS();
-//                }else {
-//                    Toast.makeText(this,"This app requires GPS permission to be granted in order to work properly", Toast.LENGTH_SHORT).show();
-////                    finish();
-//                }
-//                break;
-//
-//            case CAMERA_PERMISSION_REQUEST_CODE:
-//                if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
-//                    updateGPS();
-//                }else {
-//                    Toast.makeText(this,"This app requires CAMERA permission to be granted in order to work properly", Toast.LENGTH_SHORT).show();
-////                    finish();
-//                }
-//                break;
             case PERMISSION_GRANTED:
                if (sum==0)
                     updateGPS();
@@ -303,6 +332,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
         int ACCESS_FINE_LOCATION = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int ACCESS_CAMERA= ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int ACCESS_EXIF_LOCATION = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_MEDIA_LOCATION);
 
         List<String> listPermissionsNeeded = new ArrayList<>();
 
@@ -311,6 +341,9 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         }
         if (ACCESS_FINE_LOCATION != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ACCESS_EXIF_LOCATION != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
         }
 
         if (!listPermissionsNeeded.isEmpty()) {

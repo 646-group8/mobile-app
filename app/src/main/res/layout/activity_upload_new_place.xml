@@ -8,35 +8,43 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".UploadNewPlaceActivity">
-
+<!--    android:background="#ff9900"-->
     <ImageView
         android:id="@+id/newPlaceImageView"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="9"
-        android:background="#ff9900"
+        android:layout_weight="12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/uwaterloologo"
         tools:layout_editor_absoluteY="54dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="GPS Information (Lat,n Lon)"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <TextView
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <EditText
             android:id="@+id/tx_lat"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="9dp"
             android:text="GPS Lat"
             android:gravity="center"/>
-        <TextView
+        <EditText
             android:id="@+id/tx_lon"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="9dp"
             android:text="GPS Lon"
             android:gravity="center"/>
     </LinearLayout>
@@ -50,17 +58,27 @@
         android:inputType="textEmailAddress" />
 
     <EditText
+        android:id="@+id/editTextTextNewPlaceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:hint="Please input the name of this place here"
+        android:inputType="textEmailAddress" />
+
+    <EditText
         android:id="@+id/eidtTextPlaceDes"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        android:layout_weight="5"
+        android:layout_weight="4"
         android:hint="Please input your Description here"
         android:inputType="textMultiLine" />
 
 
 
     <LinearLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
@@ -72,15 +90,15 @@
             android:textSize="5pt"
             android:text="Album SELECTION" />
 
-        <Button
-            android:onClick="takePicture"
-            android:id="@+id/button_choose_from_camera"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:textSize="5pt"
-            android:text="CAMERA Thumbnail" />
+<!--        <Button-->
+<!--            android:onClick="takePicture"-->
+<!--            android:id="@+id/button_choose_from_camera"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:textSize="5pt"-->
+<!--            android:text="CAMERA Thumbnail" />-->
 
         <Button
             android:onClick="dispatchTakePictureIntent"
