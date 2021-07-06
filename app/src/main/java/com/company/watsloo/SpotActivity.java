@@ -60,14 +60,15 @@ public class SpotActivity extends AppCompatActivity {
         });
 
 
-        //button :submit story/take pictures->文哥
+        //button :submit story/take pictures->文哥 -> 我用 intent link 过去了（梅耀文留)
         Button buttonSubmit = (Button)this.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentSubmit = new Intent();
-                intentSubmit.setClass(SpotActivity.this, TakePicturesActivity.class);
-                startActivity(intentSubmit);
+                gotoUploadNewPlaceActivity(null);
+//                Intent intentSubmit = new Intent();
+//                intentSubmit.setClass(SpotActivity.this, TakePicturesActivity.class);
+//                startActivity(intentSubmit);
                 }
         });
         //back to home page
@@ -84,6 +85,10 @@ public class SpotActivity extends AppCompatActivity {
     }
 
 
+    public void gotoUploadNewPlaceActivity(View view){
+        Intent intent = new Intent(this, UploadNewPlaceActivity.class );
+        startActivity(intent);
+    }
 
 
 

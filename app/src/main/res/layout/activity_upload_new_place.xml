@@ -116,7 +116,7 @@
 
 
     <Button
-        android:onClick="sendMessage"
+        android:onClick="sendStory"
         android:id="@+id/button_submit_new_place"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

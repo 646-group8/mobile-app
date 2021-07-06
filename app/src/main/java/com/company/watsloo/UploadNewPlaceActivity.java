@@ -11,6 +11,7 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -29,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.watsloo.data.DataOperation;
+import com.company.watsloo.data.Item;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -52,7 +55,8 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
     Button albumBtn, cameraBtn, submitBtn;
     ImageView imageView;
-    EditText textView_lat, textView_lon;
+    Bitmap myBitmap;
+    EditText textView_lat, textView_lon, textView_name, textView_discription, textView_email;
     private final static int SELECT_PHOTOT_FROM_ALBUM = 250;
     private final static int REQUEST_IMAGE_CAPTURE   = 520;
     private final static int REQUEST_FULL_CAMERA_IMAGE   = 100;
@@ -83,6 +87,9 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         submitBtn = findViewById(R.id.button_submit_new_place);
         textView_lat = findViewById(R.id.tx_lat);
         textView_lon = findViewById(R.id.tx_lon);
+        textView_name = findViewById(R.id.editTextTextNewPlaceName);
+        textView_discription = findViewById(R.id.eidtTextPlaceDes);
+        textView_email = findViewById(R.id.editTextTextEmailAddress);
 
         checkAndRequestPermissions();
 
@@ -141,6 +148,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         // if the user wants to get just the thumbnail of the image
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bmp = (Bitmap) data.getExtras().get("data");
+            myBitmap = bmp;
             imageView.setImageBitmap(bmp);
         }
 
@@ -148,6 +156,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         if (requestCode == REQUEST_FULL_CAMERA_IMAGE && resultCode == RESULT_OK) {
             Toast.makeText(getApplicationContext(), photoFile.toString(), Toast.LENGTH_LONG).show();
             Bitmap imageBitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            myBitmap = imageBitmap;
             imageView.setImageBitmap(imageBitmap);
             // update GPS information after a picture is taken
             updateGPS();
@@ -166,6 +175,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
             try (InputStream inputStream = getContentResolver().openInputStream(selectedImage)) {
                 Bitmap imageBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
+                myBitmap = imageBitmap;
                 imageView.setImageBitmap(imageBitmap); // get the bitmap of the picture, and set the image above
                 ExifInterface exifInterface = new ExifInterface(inputStream);
 
@@ -284,6 +294,31 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE, bitmapImage);
 
         startActivity(intent);
+    }
+
+    public void sendStory(View view){
+        String strLat = textView_lat.getText().toString();
+        String strLog = textView_lon.getText().toString();
+        String strName = textView_name.getText().toString();
+        String strStory = textView_discription.getText().toString();
+        String strEmail = textView_email.getText().toString();
+
+        float fLat = Float.parseFloat(strLat);
+        float fLog = Float.parseFloat(strLog);
+
+
+        List<String> stories = new ArrayList<>();
+        stories.add(strStory);
+        Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
+        Resources res = getResources();
+        Bitmap bmp1 = myBitmap;
+        DataOperation.addItem(this, testItem1);
+        DataOperation.addStories(this, strName, stories);
+        try{
+        DataOperation.addBitmap(this, strName, bmp1);}
+        catch (IOException e){
+
+        }
     }
 
     // update GPS information on the Screen

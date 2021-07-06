@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 
+import android.content.ClipData;
 import android.content.Context;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.nav_overview) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     // send an intent to active the overview mode here
+                    gotoOverViewActivity(null);
                 } else if (id == R.id.nav_follow) {
                     // send an intent to active the following mode here
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -87,19 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-    }
-
-    // Display the sidebar when the toggle is pressed
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(this, "Welcome to explore our Campus", Toast.LENGTH_LONG).show();
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 
         // for firebase test, ignore
@@ -132,10 +121,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    // Display the sidebar when the toggle is pressed
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(this, "Welcome to UWaterloo Campus", Toast.LENGTH_SHORT).show();
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
 
 
     public void gotoUploadNewPlaceActivity(View view){
         Intent intent = new Intent(this, UploadNewPlaceActivity.class );
+        startActivity(intent);
+    }
+
+    public void gotoOverViewActivity(View view){
+        Intent intent = new Intent(this, MapsActivity.class );
         startActivity(intent);
     }
 }
