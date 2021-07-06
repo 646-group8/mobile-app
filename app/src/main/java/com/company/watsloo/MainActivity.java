@@ -47,9 +47,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (id == R.id.nav_overview) {
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    // send an intent to active the overview mode here
                 } else if (id == R.id.nav_follow) {
+                    // send an intent to active the following mode here
                     drawerLayout.closeDrawer(GravityCompat.START);
                 } else if (id == R.id.nav_upload) {
+                    // send an intent to active the story upload mode here
                     Toast.makeText(thiscontext, "upload your own story", Toast.LENGTH_LONG).show();
                     drawerLayout.closeDrawer(GravityCompat.START);
                     Intent intent = new Intent(thiscontext, UploadNewPlaceActivity.class );
