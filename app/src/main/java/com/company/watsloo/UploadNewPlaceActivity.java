@@ -299,8 +299,12 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
+                    if (location ==null ){
+                        textView_lat.setText("No GPS information found");
+                        textView_lon.setText("No GPS information found");
+                    }else{
                     textView_lat.setText(String.valueOf(location.getLatitude()));
-                    textView_lon.setText(String.valueOf(location.getLongitude()));
+                    textView_lon.setText(String.valueOf(location.getLongitude()));}
                 }
             });
         }else{
