@@ -39,31 +39,42 @@ public class SpotActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         spot_title.setText(title);
 
-        int[] image_story = new int[]{R.drawable.uwaterloologo, R.drawable.uwaterloologo};
+        int[] image_story = new int[]{R.drawable.eggfountain, R.drawable.physics, R.drawable.qnc,
+        };
         String[] title_story = new String[image_story.length];
         switch (title) {
-            case "Mathematics & Computer Building":
-                title_story[0] = "story11";
-                title_story[1] = "story22";
-                for (int i = 0; i < image_story.length; i++) {
-
+            case "Egg Fountain":
+                title_story[0] = "Put coins in the fountain and make a wish, you will get good mark in your final exams";
+                title_story[1] = "Hold a party here";
+                for(int i = 0; i < 2; i++) {
                     HashMap<String, Object> map = new HashMap<String, Object>();
                     map.put("text", title_story[i]);
-                    map.put("pic", image_story[i]);
+                    map.put("pic", image_story[0]);
+                    dataList.add(map);
+                }
 
-                    dataList.add(map);
-                }
                 break;
-            case "Marker in Loo":
-                title_story[0] = "story33";
-                title_story[1] = "story44";
-                for (int i = 0; i < image_story.length; i++) {
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("text", title_story[i]);
-                    map.put("pic", image_story[i]);
-                    dataList.add(map);
-                }
+
+            case "Physics Building":
+                title_story[0] = "An Admirable Person";
+
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("text", title_story[0]);
+                map.put("pic", image_story[1]);
+                dataList.add(map);
                 break;
+
+            case "QNC":
+                title_story[0] = "The Birthday of QNC";
+
+                map = new HashMap<String, Object>();
+                map.put("text", title_story[0]);
+                map.put("pic", image_story[2]);
+                dataList.add(map);
+
+                break;
+
+
 
         }
 
