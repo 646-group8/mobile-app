@@ -1,6 +1,5 @@
 package com.company.watsloo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -12,7 +11,7 @@ public class TakePicturesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_submit);
+        setContentView(R.layout.activity_take_pictures);
         submit_text= findViewById(R.id.submitText);
         //Intent intent=getIntent();
         String input="input";
