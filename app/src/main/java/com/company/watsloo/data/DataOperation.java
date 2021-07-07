@@ -1,19 +1,21 @@
 package com.company.watsloo.data;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
+import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.company.watsloo.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -21,9 +23,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class DataOperation {
@@ -143,6 +143,71 @@ public class DataOperation {
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(context,
                         "Fail to upload the image!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void downloadByPath(Context context, String path) {
+        StorageReference ref = storageRef.child(path);
+
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                String url = uri.toString();
+                String fileName = path.split("/")[1];
+                System.out.println(fileName);
+                downloadFile(context, fileName, Environment.DIRECTORY_DOWNLOADS, url);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+    }
+
+    public static void downloadFile(Context context, String fileName, String destDirectory, String url) {
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, destDirectory, fileName);
+        downloadManager.enqueue(request);
+    }
+
+    public static void readPosData() {
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    Position ps = ds.getValue(Position.class);
+                    System.out.println(ps);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void readDataByName(String name, String property) {
+        DatabaseReference ref = dbRef.child(name);
+        ref.child(property).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    System.out.println(ds.getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
             }
         });
     }
