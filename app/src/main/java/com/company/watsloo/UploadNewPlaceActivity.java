@@ -183,9 +183,17 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
                 String lat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
                 String log = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                String logREF = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
                 if (lat!=null){
+//                    Toast.makeText(this, log + logREF, Toast.LENGTH_LONG).show();
                 textView_lat.setText(String.valueOf(covertRationalGPS2DecimalGPS(lat)));
-                textView_lon.setText(String.valueOf(covertRationalGPS2DecimalGPS(log)));
+
+                if (logREF.equals("W")){
+                    //need to show negative value when Longitrude is in West
+                textView_lon.setText(String.valueOf(-1*covertRationalGPS2DecimalGPS(log)));}
+                else{
+                    textView_lon.setText(String.valueOf(covertRationalGPS2DecimalGPS(log)));
+                }
                 textView_lat.setTextColor(Color.BLUE);
                 textView_lon.setTextColor(Color.BLUE);
                 } else{
