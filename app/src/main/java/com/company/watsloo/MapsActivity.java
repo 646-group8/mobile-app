@@ -100,9 +100,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(this::onMarkerClick);
         mMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
         // Add a marker in Waterloo and move the camera
-        LatLng loo = new LatLng(43.4723,-80.5449),mc=new LatLng(43.47207511,-80.54394739);
-        Marker loo_mark=mMap.addMarker(new MarkerOptions().position(loo).title("Marker in Loo").snippet("Click to get more info"));
-        Marker mc_mark=mMap.addMarker(new MarkerOptions().position(mc).title("Mathematics & Computer Building").snippet("Click to get more info"));
+        LatLng loo = new LatLng(43.4723,-80.5449);
+        LatLng ECE_Hall=new LatLng(43.468866,-80.541278);
+        LatLng Egg_Fountain=new LatLng(43.471778869628906,-80.54332733154297);
+        LatLng Physics_Building=new LatLng(43.4705810546875,43.4705810546875);
+        LatLng qnc=new LatLng(43.47111892700195,-80.54422760009766);
+
+        Marker loo_mark=mMap.addMarker(new MarkerOptions().position(loo).title("Marker in Loo").snippet("Click here to get more info"));
+        mMap.addMarker(new MarkerOptions().position(ECE_Hall).title("ECE Hall").snippet("Click here to get more info"));
+        mMap.addMarker(new MarkerOptions().position(Egg_Fountain).title("Egg Fountain").snippet("Click here to get more info"));
+        mMap.addMarker(new MarkerOptions().position(Physics_Building).title("Physics Building").snippet("Click here to get more info"));
+        mMap.addMarker(new MarkerOptions().position(qnc).title("QNC").snippet("Click here to get more info"));
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loo,15));
     }
 
