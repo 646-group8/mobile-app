@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.company.watsloo">
+    package="com.company.watsloo" >
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -28,23 +28,26 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WatsLoo">
+        android:theme="@style/Theme.WatsLoo" >
+        <activity android:name=".DataBaseDevelopActivity" >
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.company.watsloo.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true" >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".MainActivity">
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -56,19 +59,22 @@
         -->
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:label="@string/title_activity_maps" >
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".TakePicturesActivity"></activity>
-        <activity android:name=".UploadNewPlaceActivity"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name=".DetailActivity"></activity>
-        <activity android:name=".SpotActivity"></activity>
+        <activity android:name=".TakePicturesActivity" />
+        <activity
+            android:name=".UploadNewPlaceActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".SpotActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

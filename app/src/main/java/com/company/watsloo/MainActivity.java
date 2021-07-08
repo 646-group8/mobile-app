@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private static final String PROJ_PATH = System.getProperty("user.dir");
-    private Button buttonUpload;
+
 
 
     @Override
@@ -84,39 +84,11 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(thiscontext, UploadNewPlaceActivity.class );
                     startActivity(intent);
 
+                } else if (id == R.id.nav_databasetest){
+                    gotoDataBaseDevelopActivity(null);
                 }
 
                 return true;
-            }
-        });
-
-
-        // for firebase test, ignore
-        buttonUpload = findViewById(R.id.button_upload);
-
-        List<String> stories = new ArrayList<>();
-        stories.add("banal story 1");
-        stories.add("banal story 2");
-        stories.add("banal story 3");
-        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
-                "A hall in UWaterloo", stories);
-
-        Resources res = getResources();
-        Bitmap bmp1 = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_text_light_normal_background);
-        Bitmap bmp2 = BitmapFactory.decodeResource(res, R.drawable.common_full_open_on_phone);
-
-        buttonUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataOperation.addItem(MainActivity.this, testItem1);
-                DataOperation.addStories(MainActivity.this, "Hagey Hall", stories);
-
-                try {
-                    DataOperation.addBitmap(MainActivity.this, "Hagey Hall", bmp1);
-                    DataOperation.addBitmap(MainActivity.this, "Hagey Hall", bmp2);
-                } catch (IOException e) {
-                    // exception handling
-                }
             }
         });
 
@@ -134,11 +106,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     public void gotoUploadNewPlaceActivity(View view){
         Intent intent = new Intent(this, UploadNewPlaceActivity.class );
         startActivity(intent);
@@ -146,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void gotoOverViewActivity(View view){
         Intent intent = new Intent(this, MapsActivity.class );
+        startActivity(intent);
+    }
+    public void gotoDataBaseDevelopActivity(View view){
+        Intent intent = new Intent(this, DataBaseDevelopActivity.class );
         startActivity(intent);
     }
 }
