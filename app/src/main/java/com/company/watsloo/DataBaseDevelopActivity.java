@@ -2,6 +2,7 @@ package com.company.watsloo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class DataBaseDevelopActivity extends AppCompatActivity {
 
-    private Button buttonUpload;
+    private Button buttonUpload, buttonRead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
 
         // for firebase test, ignore
         buttonUpload = findViewById(R.id.button_upload);
+        buttonRead = findViewById(R.id.buttontyr2read);
 
         List<String> stories = new ArrayList<>();
         stories.add("banal story 1");
@@ -54,4 +56,11 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void gotoReadDataActivity(View view){
+        Intent intent = new Intent(this, ReadDataActivity.class );
+        startActivity(intent);
+    }
+
+
 }
