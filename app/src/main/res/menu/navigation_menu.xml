@@ -19,9 +19,9 @@
         android:icon="@drawable/photograph"
         android:title="Upload a New Story" />
 
-    <item
-        android:id="@+id/nav_databasetest"
-        android:icon="@drawable/coding"
-        android:title="DataBase Development" />
+<!--    <item-->
+<!--        android:id="@+id/nav_databasetest"-->
+<!--        android:icon="@drawable/coding"-->
+<!--        android:title="DataBase Development" />-->
 
 </menu>

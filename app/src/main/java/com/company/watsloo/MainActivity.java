@@ -84,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(thiscontext, UploadNewPlaceActivity.class );
                     startActivity(intent);
 
-                } else if (id == R.id.nav_databasetest){
-                    gotoDataBaseDevelopActivity(null);
                 }
+//                else if (id == R.id.nav_databasetest){
+//                    gotoDataBaseDevelopActivity(null);
+//                }
 
                 return true;
             }
