@@ -114,7 +114,7 @@ public class SpotActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intentSubmit = new Intent();
-                intentSubmit.setClass(SpotActivity.this, TakePicturesActivity.class);
+                intentSubmit.setClass(SpotActivity.this, UploadNewPlaceActivity.class);
                 startActivity(intentSubmit);
             }
         });

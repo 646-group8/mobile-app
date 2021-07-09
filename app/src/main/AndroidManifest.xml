@@ -68,7 +68,6 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".TakePicturesActivity" />
         <activity
             android:name=".UploadNewPlaceActivity"
             android:screenOrientation="portrait" />
