@@ -31,52 +31,52 @@ public class DataOperation {
     private static DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     private static StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-    public static void addItem(Context context, Item item) {
-        DatabaseReference itemRef = dbRef.child(item.getName());
-        itemRef.child("latitude").setValue(item.getLatitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(context,
-                        "Successfully add latitude!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context,
-                        "Fail to add latitude!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        itemRef.child("longitude").setValue(item.getLongitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(context,
-                        "Successfully add longitude!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context,
-                        "Fail to add longitude!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        itemRef.child("description").setValue(item.getDescription()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(context,
-                        "Successfully add description!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context,
-                        "Fail to add description!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (!item.getStories().isEmpty()) {
-            addStories(context, item.getName(), item.getStories());
-        }
-    }
+//    public static void addItem(Context context, Item item) {
+//        DatabaseReference itemRef = dbRef.child(item.getName());
+//        itemRef.child("latitude").setValue(item.getLatitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Toast.makeText(context,
+//                        "Successfully add latitude!", Toast.LENGTH_SHORT).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context,
+//                        "Fail to add latitude!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        itemRef.child("longitude").setValue(item.getLongitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Toast.makeText(context,
+//                        "Successfully add longitude!", Toast.LENGTH_SHORT).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context,
+//                        "Fail to add longitude!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        itemRef.child("description").setValue(item.getDescription()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//                Toast.makeText(context,
+//                        "Successfully add description!", Toast.LENGTH_SHORT).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context,
+//                        "Fail to add description!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        if (!item.getStories().isEmpty()) {
+//            addStories(context, item.getName(), item.getStories());
+//        }
+//    }
 
     public static void addStories(Context context, String itemName, List<String> stories) {
         DatabaseReference itemRef = dbRef.child(itemName);
@@ -143,6 +143,36 @@ public class DataOperation {
             public void onFailure(@NonNull Exception exception) {
                 Toast.makeText(context,
                         "Fail to upload the image!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void addContactInfo(Context context, String itemName,
+                                      String contactMethod, String contactInfo) {
+        DatabaseReference itemRef = dbRef.child(itemName);
+        addSingleField(context, itemRef, contactMethod, contactInfo);
+    }
+
+    public static void addSingleField(Context context, DatabaseReference ref,
+                                       String fieldName, String fieldValue) {
+        ref.child(fieldName).setValue(fieldValue).addOnFailureListener(new OnFailureListener() {
+            final String text = String.format("Fail to add %s!", fieldName);
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void addSingleField(Context context, DatabaseReference ref,
+                                      String fieldName, double fieldValue) {
+        ref.child(fieldName).setValue(fieldValue).addOnFailureListener(new OnFailureListener() {
+            final String text = String.format("Fail to add %s!", fieldName);
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         });
     }

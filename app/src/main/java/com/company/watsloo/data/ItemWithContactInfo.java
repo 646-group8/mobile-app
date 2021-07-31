@@ -1,5 +1,6 @@
 package com.company.watsloo.data;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.util.List;
@@ -49,5 +50,10 @@ public abstract class ItemWithContactInfo implements ItemInterface {
 
     public String getContactInfo() {
         return contactInfo;
+    }
+
+    @Override
+    public void addItem(Context context) {
+        decoratedItem.addItem(context);
     }
 }
