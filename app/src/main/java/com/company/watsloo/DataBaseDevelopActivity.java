@@ -42,7 +42,7 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataOperation.addItem(DataBaseDevelopActivity.this, testItem1);
+                testItem1.addItem(DataBaseDevelopActivity.this);
                 DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
 
                 try {

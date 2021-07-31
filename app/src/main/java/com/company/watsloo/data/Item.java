@@ -4,14 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +18,8 @@ public class Item implements ItemInterface {
     private String description;
     private List<String> stories;
     private List<Bitmap> bitmaps;
+    private boolean isAudited = false;
+    private boolean isEasterEgg = false;
 
     public Item(String name, double latitude, double longitude, String description) {
         this.name = name;
@@ -75,6 +71,16 @@ public class Item implements ItemInterface {
     }
 
     @Override
+    public boolean isAudited() {
+        return isAudited;
+    }
+
+    @Override
+    public boolean isEasterEgg() {
+        return isEasterEgg;
+    }
+
+    @Override
     public void addItem(Context context) {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
 
@@ -87,5 +93,7 @@ public class Item implements ItemInterface {
         if (!getStories().isEmpty()) {
             DataOperation.addStories(context, getName(), getStories());
         }
+
+//        Toast.makeText(context, "Data uploaded.", Toast.LENGTH_SHORT).show();
     }
 }

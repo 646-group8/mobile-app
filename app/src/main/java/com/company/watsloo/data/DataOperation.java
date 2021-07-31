@@ -128,13 +128,13 @@ public class DataOperation {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(context,
-                                "Successfully stored the image url!", Toast.LENGTH_SHORT).show();
+                                "Successfully store the image!", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context,
-                                "Fail to store the image url!", Toast.LENGTH_SHORT).show();
+                                "Fail to store the image!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

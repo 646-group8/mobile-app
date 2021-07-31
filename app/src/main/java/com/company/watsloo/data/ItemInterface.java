@@ -12,6 +12,8 @@ public interface ItemInterface {
     String getDescription();
     List<String> getStories();
     List<Bitmap> getBitmaps();
+    boolean isAudited();
+    boolean isEasterEgg();
 
     void addItem(Context context);
 }

@@ -320,7 +320,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
         Resources res = getResources();
         Bitmap bmp1 = myBitmap;
-        DataOperation.addItem(this, testItem1);
+        testItem1.addItem(this);
         DataOperation.addStories(this, strName, stories);
         try{
         DataOperation.addBitmap(this, strName, bmp1);}

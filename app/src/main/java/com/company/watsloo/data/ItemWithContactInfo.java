@@ -48,6 +48,16 @@ public abstract class ItemWithContactInfo implements ItemInterface {
         return decoratedItem.getBitmaps();
     }
 
+    @Override
+    public boolean isAudited() {
+        return decoratedItem.isAudited();
+    }
+
+    @Override
+    public boolean isEasterEgg() {
+        return decoratedItem.isEasterEgg();
+    }
+
     public String getContactInfo() {
         return contactInfo;
     }
