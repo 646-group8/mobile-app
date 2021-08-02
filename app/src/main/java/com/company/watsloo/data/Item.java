@@ -89,6 +89,8 @@ public class Item implements ItemInterface {
         DataOperation.addSingleField(context, itemRef, "latitude", getLatitude());
         DataOperation.addSingleField(context, itemRef, "longitude", getLongitude());
         DataOperation.addSingleField(context, itemRef, "description", getDescription());
+        DataOperation.addSingleField(context, itemRef, "isAudited", false);
+        DataOperation.addSingleField(context, itemRef, "isEasterEgg", false);
 
         if (!getStories().isEmpty()) {
             DataOperation.addStories(context, getName(), getStories());

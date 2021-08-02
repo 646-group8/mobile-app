@@ -42,7 +42,13 @@ public class DataOperation {
                     existedStories = new ArrayList<>();
                 }
                 existedStories.addAll(stories);
-                storiesRef.setValue(existedStories).addOnFailureListener(new OnFailureListener() {
+                storiesRef.setValue(existedStories).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(context,
+                                "Succeed to add the item!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context,
@@ -115,6 +121,18 @@ public class DataOperation {
 
     public static void addSingleField(Context context, DatabaseReference ref,
                                       String fieldName, double fieldValue) {
+        ref.child(fieldName).setValue(fieldValue).addOnFailureListener(new OnFailureListener() {
+            final String text = String.format("Fail to add %s!", fieldName);
+
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public static void addSingleField(Context context, DatabaseReference ref,
+                                      String fieldName, boolean fieldValue) {
         ref.child(fieldName).setValue(fieldValue).addOnFailureListener(new OnFailureListener() {
             final String text = String.format("Fail to add %s!", fieldName);
 
