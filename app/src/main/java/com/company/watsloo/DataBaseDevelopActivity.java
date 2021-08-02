@@ -2,6 +2,7 @@ package com.company.watsloo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,5 +54,14 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void testButforMengYao(View view){
+        Intent intent = new Intent(this, UploadNewPlaceActivity.class);
+        intent.putExtra("lat","Lat_from_YM");
+        intent.putExtra("log","Log_from_MY");
+        intent.putExtra("title","Title_from_MY");
+        intent.putExtra("requestCode", "READ_GPS_FROM_MAP");
+        startActivity(intent);
     }
 }
