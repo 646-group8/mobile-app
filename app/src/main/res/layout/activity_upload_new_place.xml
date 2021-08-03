@@ -94,14 +94,16 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/button_choose_from_album"
-            android:layout_width= "0dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
-            android:textSize="5pt"
-            android:text="Upload Picture form Album" />
+            android:layout_weight="1"
+            android:onClick="dispatchSelectPictureIntent"
+            android:text="Upload Picture form Album"
+            android:textSize="5pt" />
 
 <!--        <Button-->
 <!--            android:onClick="takePicture"-->

@@ -32,6 +32,8 @@ import android.widget.Toast;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
+import com.company.watsloo.strategy_pattern.client.GPSUpdateWithPictureEXIFClient;
+import com.company.watsloo.strategy_pattern.client.GPSUpdatreManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -69,6 +71,11 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     String currentPhotoPath;
     private Uri fileProvider;
 
+    // Parameters for the Strategy Design Pattern;
+    private String currentLat = "None";
+    private String currentLon = "None";
+    private Intent incomingIntent;
+
     //Google's API for Location Services
     FusedLocationProviderClient fusedLocationProviderClient;
     // Location request is a config file for all the settings related to FusedLocationProviderClient
@@ -82,8 +89,6 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
         // initialize all the btns, and editText, and imageView;
         imageView = findViewById(R.id.newPlaceImageView);
-        albumBtn = findViewById(R.id.button_choose_from_album);
-//        cameraBtn = findViewById(R.id.button_choose_from_camera);
         submitBtn = findViewById(R.id.button_submit_new_place);
         textView_lat = findViewById(R.id.tx_lat);
         textView_lon = findViewById(R.id.tx_lon);
@@ -101,47 +106,16 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(1000*5);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        albumBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent pickfromAlbum = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickfromAlbum,SELECT_PHOTOT_FROM_ALBUM);
-            }
-        });
+        prepareGPSconfiguration();
+
         updateGPS();
     }
 
 
 
-//    // Check the permission of Camera
-//    public boolean checkPermissionForCamera(){
-//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-//        if (result == PackageManager.PERMISSION_GRANTED){
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    // Check the permission of GPS
-//    public boolean checkPermissionForGPS(){
-//        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-//        if (result == PackageManager.PERMISSION_GRANTED){
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//
-//    public void takePicture(View v){
-//        Toast.makeText(this, "Return a Thumbnail of Picture", Toast.LENGTH_LONG).show();
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
-
+// This is the major logic section of this activity,
+// if the user 1) decide to take a picture, we are going to use the current realtime GPS
+// if the user 2) decide to upload a picture from ablum, we are going to use the EXIF GPS
     @RequiresApi(api = Build.VERSION_CODES.N)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,31 +153,32 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                 myBitmap = imageBitmap;
                 imageView.setImageBitmap(imageBitmap); // get the bitmap of the picture, and set the image above
                 ExifInterface exifInterface = new ExifInterface(inputStream);
-
-
-
-                String lat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-                String log = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-                String logREF = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-                if (lat!=null){
-//                    Toast.makeText(this, log + logREF, Toast.LENGTH_LONG).show();
-                textView_lat.setText(String.valueOf(covertRationalGPS2DecimalGPS(lat)));
-
-                if (logREF.equals("W")){
-                    //need to show negative value when Longitrude is in West
-                textView_lon.setText(String.valueOf(-1*covertRationalGPS2DecimalGPS(log)));}
-                else{
-                    textView_lon.setText(String.valueOf(covertRationalGPS2DecimalGPS(log)));
-                }
-                textView_lat.setTextColor(Color.BLUE);
-                textView_lon.setTextColor(Color.BLUE);
-                } else{
-                    Toast.makeText(this, "Please manually input the GPS information for this picture", Toast.LENGTH_LONG).show();
-                    textView_lat.setText("None");
-                    textView_lon.setText("None");
-                    textView_lat.setTextColor(Color.RED);
-                    textView_lon.setTextColor(Color.RED);
-                }
+                GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithPictureEXIFClient(textView_lat,textView_lon,exifInterface);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following code was be remove after we applied the strategy design pattern
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//                String lat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+//                String log = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+//                String logREF = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+//                if (lat!=null){
+////                    Toast.makeText(this, log + logREF, Toast.LENGTH_LONG).show();
+//                textView_lat.setText(String.valueOf(covertRationalGPS2DecimalGPS(lat)));
+//
+//                if (logREF.equals("W")){
+//                    //need to show negative value when Longitrude is in West
+//                textView_lon.setText(String.valueOf(-1*covertRationalGPS2DecimalGPS(log)));}
+//                else{
+//                    textView_lon.setText(String.valueOf(covertRationalGPS2DecimalGPS(log)));
+//                }
+//                textView_lat.setTextColor(Color.BLUE);
+//                textView_lon.setTextColor(Color.BLUE);
+//                } else{
+//                    Toast.makeText(this, "Please manually input the GPS information for this picture", Toast.LENGTH_LONG).show();
+//                    textView_lat.setText("None");
+//                    textView_lon.setText("None");
+//                    textView_lat.setTextColor(Color.RED);
+//                    textView_lon.setTextColor(Color.RED);
+//                }
 
             } catch (IOException  e) {
                 e.printStackTrace();
@@ -211,40 +186,42 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
         }
     }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following code was be remove after we applied the strategy design pattern
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Convert the rational GPS information into the decimal gps information
+//    private Float covertRationalGPS2DecimalGPS(String gpsinput){
+//        String[] gpsList  = gpsinput.replace("/", ",").split(",");
+//
+//        Float gpsD =0f;
+//
+//        Float gpsM =0f;
+//
+//        Float gpsS =0f;
+//
+//        if (gpsList.length >=2) {
+//
+//            gpsD = Float.parseFloat(gpsList[0]) / Float.parseFloat(gpsList[1]);
+//
+//        }
+//
+//        if (gpsList.length >=4) {
+//
+//            gpsM = Float.parseFloat(gpsList[2]) / Float.parseFloat(gpsList[3]);
+//
+//        }
+//
+//        if (gpsList.length >=6) {
+//
+//            gpsS = Float.parseFloat(gpsList[4]) / Float.parseFloat(gpsList[5]);
+//
+//        }
+//
+//        return  gpsD + gpsM /60 + gpsS /3600;
+//    }
 
-    // Convert the rational GPS information into the decimal gps information
-    private Float covertRationalGPS2DecimalGPS(String gpsinput){
-        String[] gpsList  = gpsinput.replace("/", ",").split(",");
 
-        Float gpsD =0f;
-
-        Float gpsM =0f;
-
-        Float gpsS =0f;
-
-        if (gpsList.length >=2) {
-
-            gpsD = Float.parseFloat(gpsList[0]) / Float.parseFloat(gpsList[1]);
-
-        }
-
-        if (gpsList.length >=4) {
-
-            gpsM = Float.parseFloat(gpsList[2]) / Float.parseFloat(gpsList[3]);
-
-        }
-
-        if (gpsList.length >=6) {
-
-            gpsS = Float.parseFloat(gpsList[4]) / Float.parseFloat(gpsList[5]);
-
-        }
-
-        return  gpsD + gpsM /60 + gpsS /3600;
-    }
-
-
-
+// Start the take picture intent;
     public void dispatchTakePictureIntent(View v) {
         Toast.makeText(this, "Return a full picture", Toast.LENGTH_LONG).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -258,6 +235,11 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_FULL_CAMERA_IMAGE);
         }
+    }
+// Start the select picture from ablum intent;
+    public void dispatchSelectPictureIntent(View v){
+        Intent pickfromAlbum = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickfromAlbum,SELECT_PHOTOT_FROM_ALBUM);
     }
 
     private File createImageFile() throws IOException {
@@ -286,24 +268,24 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         return image;
     }
 
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-
-        EditText editTextEmail = (EditText) findViewById(R.id.editTextTextEmailAddress);
-        String emailAddress = editTextEmail.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, emailAddress);
-
-        EditText editTextDes = (EditText) findViewById(R.id.eidtTextPlaceDes);
-        String Description = editTextDes.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, Description);
-
-        ImageView inputImage = (ImageView) findViewById(R.id.newPlaceImageView);
-        inputImage.buildDrawingCache();
-        Bitmap bitmapImage = inputImage.getDrawingCache();
-        intent.putExtra(EXTRA_MESSAGE, bitmapImage);
-
-        startActivity(intent);
-    }
+//    public void sendMessage(View view) {
+//        Intent intent = new Intent(this, MainActivity.class);
+//
+//        EditText editTextEmail = (EditText) findViewById(R.id.editTextTextEmailAddress);
+//        String emailAddress = editTextEmail.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, emailAddress);
+//
+//        EditText editTextDes = (EditText) findViewById(R.id.eidtTextPlaceDes);
+//        String Description = editTextDes.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, Description);
+//
+//        ImageView inputImage = (ImageView) findViewById(R.id.newPlaceImageView);
+//        inputImage.buildDrawingCache();
+//        Bitmap bitmapImage = inputImage.getDrawingCache();
+//        intent.putExtra(EXTRA_MESSAGE, bitmapImage);
+//
+//        startActivity(intent);
+//    }
 
     public void sendStory(View view){
         String strLat = textView_lat.getText().toString();
@@ -350,6 +332,32 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                     }else{
                     textView_lat.setText(String.valueOf(location.getLatitude()));
                     textView_lon.setText(String.valueOf(location.getLongitude()));}
+                }
+            });
+        }else{
+            // if we do not have GPS permission, we are going to ask for it
+        }
+    }
+
+    // Get the current GPS information and save them in two private strings for latter use
+    private void prepareGPSconfiguration(){
+        //get permissions from the user to track GPS
+        //get the current lcoaiton from the fused client
+        //update the text view
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED ){
+            // if have the permission for both GPS and Camera already
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location ==null ){
+                        currentLat = "No GPS information found";
+                        currentLon = "No GPS information found";
+                    }else{
+                        textView_lat.setText(String.valueOf(location.getLatitude()));
+                        textView_lon.setText(String.valueOf(location.getLongitude()));}
                 }
             });
         }else{
