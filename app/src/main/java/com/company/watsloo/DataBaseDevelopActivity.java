@@ -43,15 +43,15 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DataOperation.addItem(DataBaseDevelopActivity.this, testItem1);
-//                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
-//
-//                try {
-//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
-//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
-//                } catch (IOException e) {
-//                    // exception handling
-//                }
+                testItem1.addItem(DataBaseDevelopActivity.this);
+                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
+
+                try {
+                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
+                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
+                } catch (IOException e) {
+                    // exception handling
+                }
             }
         });
     }
