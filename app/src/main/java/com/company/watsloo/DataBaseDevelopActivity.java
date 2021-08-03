@@ -2,6 +2,7 @@ package com.company.watsloo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,16 +43,25 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DataOperation.addItem(DataBaseDevelopActivity.this, testItem1);
-//                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
-//
-//                try {
-//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
-//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
-//                } catch (IOException e) {
-//                    // exception handling
-//                }
+                testItem1.addItem(DataBaseDevelopActivity.this);
+                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
+
+                try {
+                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
+                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
+                } catch (IOException e) {
+                    // exception handling
+                }
             }
         });
+    }
+
+    public void testButforMengYao(View view){
+        Intent intent = new Intent(this, UploadNewPlaceActivity.class);
+        intent.putExtra("lat","Lat_from_YM");
+        intent.putExtra("log","Log_from_MY");
+        intent.putExtra("title","Title_from_MY");
+        intent.putExtra("requestCode", "READ_GPS_FROM_MAP");
+        startActivity(intent);
     }
 }

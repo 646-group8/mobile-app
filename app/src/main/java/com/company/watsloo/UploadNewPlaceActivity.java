@@ -68,6 +68,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     private File photoFile;
     String currentPhotoPath;
     private Uri fileProvider;
+    private String myGPSKey;
 
     //Google's API for Location Services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -108,7 +109,14 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                 startActivityForResult(pickfromAlbum,SELECT_PHOTOT_FROM_ALBUM);
             }
         });
-        updateGPS();
+
+        // set the strategy for how to get the GPS information
+        myGPSKey = getIntent().getStringExtra("requestCode");
+        updateGPS(myGPSKey);
+
+        // if there is a intend comming from the map activity
+        getIntentfromMap(myGPSKey);
+
     }
 
 
@@ -160,7 +168,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
             myBitmap = imageBitmap;
             imageView.setImageBitmap(imageBitmap);
             // update GPS information after a picture is taken
-            updateGPS();
+            updateGPS(myGPSKey);
             textView_lat.setTextColor(Color.BLACK);
             textView_lon.setTextColor(Color.BLACK);
         }
@@ -243,8 +251,8 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         return  gpsD + gpsM /60 + gpsS /3600;
     }
 
-
-
+    // Use Camera to take a picture and then get  the full image from media store, and then
+    // send the full image back to this activity via intent
     public void dispatchTakePictureIntent(View v) {
         Toast.makeText(this, "Return a full picture", Toast.LENGTH_LONG).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -286,7 +294,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         return image;
     }
 
-    public void sendMessage(View view) {
+    private void sendMessage(View view) {
         Intent intent = new Intent(this, MainActivity.class);
 
         EditText editTextEmail = (EditText) findViewById(R.id.editTextTextEmailAddress);
@@ -317,26 +325,30 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         float fLog = Float.parseFloat(strLog);
 
 
-//        List<String> stories = new ArrayList<>();
-//        stories.add(strStory);
-//        Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
-//        Resources res = getResources();
-//        Bitmap bmp1 = myBitmap;
-//        DataOperation.addItem(this, testItem1);
-//        DataOperation.addStories(this, strName, stories);
-//        try{
-//        DataOperation.addBitmap(this, strName, bmp1);}
-//        catch (IOException e){
-//
-//        }
+        List<String> stories = new ArrayList<>();
+        stories.add(strStory);
+        Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
+        Resources res = getResources();
+        Bitmap bmp1 = myBitmap;
+        testItem1.addItem(this);
+        DataOperation.addStories(this, strName, stories);
+        try{
+        DataOperation.addBitmap(this, strName, bmp1);}
+        catch (IOException e){
+
+        }
     }
 
     // update GPS information on the Screen
-    private void updateGPS(){
+    private void updateGPS(String myGPSKey){
         //get permissions from the user to track GPS
         //get the current lcoaiton from the fused client
         //update the text view
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (myGPSKey!=null && myGPSKey.equals("READ_GPS_FROM_MAP")){
+            return;
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED ){
@@ -369,7 +381,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         switch (requestCode){
             case PERMISSION_GRANTED:
                if (sum==0)
-                    updateGPS();
+                    updateGPS(myGPSKey);
                else
                 Toast.makeText(this,"This app requires the permissions to be granted in order to work properly", Toast.LENGTH_SHORT).show();
                break;
@@ -401,6 +413,26 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    // set the GPS and Place Title from intent;
+    private void getIntentfromMap(String myGPSKey){
+        if (myGPSKey!=null && myGPSKey.equals("READ_GPS_FROM_MAP")){
+
+            textView_lat = findViewById(R.id.tx_lat);
+            textView_lon = findViewById(R.id.tx_lon);
+            textView_name = findViewById(R.id.editTextTextNewPlaceName);
+
+            textView_lat.setText(getIntent().getStringExtra("lat"));
+            textView_lon.setText(getIntent().getStringExtra("log"));
+            textView_name.setText(getIntent().getStringExtra("title"));
+
+            textView_lat.setTextColor(Color.CYAN);
+            textView_lon.setTextColor(Color.CYAN);
+            textView_name.setTextColor(Color.CYAN);
+
+        }
+
     }
 
 

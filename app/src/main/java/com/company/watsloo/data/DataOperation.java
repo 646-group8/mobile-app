@@ -95,12 +95,12 @@ public class DataOperation {
                 String filepath = taskSnapshot.getMetadata().getPath();
                 dbRef.child(itemName).child("images").child(randomId.toString()).setValue(filepath)
                         .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(context,
-                                        "Fail to store the image!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,
+                                "Fail to store the image!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -118,7 +118,7 @@ public class DataOperation {
     }
 
     public static void addSingleField(Context context, DatabaseReference ref,
-                                      String fieldName, String fieldValue) {
+                                       String fieldName, String fieldValue) {
         ref.child(fieldName).setValue(fieldValue).addOnFailureListener(new OnFailureListener() {
             final String text = String.format("Fail to add %s!", fieldName);
 
