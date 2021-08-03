@@ -96,10 +96,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_new_place);
         this.mycontext = this;
-        this.incomingIntent = getIntent();
-        if (incomingIntent.getStringExtra("requestCode")!=null && incomingIntent.getStringExtra("requestCode").equals("READ_GPS_FROM_MAP")){
-            ShouldReadFromIntent = true;
-        }
+
 
 
         // initialize all the btns, and editText, and imageView;
@@ -111,6 +108,15 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         textView_discription = findViewById(R.id.eidtTextPlaceDes);
         textView_email = findViewById(R.id.editTextTextEmailAddress);
         textView_story = findViewById(R.id.eidtTextPlaceStory);
+
+        // Analysis the incoming intent:
+        this.incomingIntent = getIntent();
+        if (incomingIntent.getStringExtra("requestCode")!=null && incomingIntent.getStringExtra("requestCode").equals("READ_GPS_FROM_MAP")){
+            ShouldReadFromIntent = true;
+        }
+        if (incomingIntent.getStringExtra("title")!=null){
+            textView_name.setText(incomingIntent.getStringExtra("title"));
+        }
 
         checkAndRequestPermissions();
 
