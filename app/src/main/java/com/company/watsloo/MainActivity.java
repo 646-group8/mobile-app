@@ -1,37 +1,17 @@
 package com.company.watsloo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-
-import android.content.ClipData;
 import android.content.Context;
-import android.annotation.SuppressLint;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-
-import com.company.watsloo.data.DataOperation;
-import com.company.watsloo.data.Item;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -77,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_follow) {
                     // send an intent to active the following mode here
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    gotoFollowActivity(null);
                 } else if (id == R.id.nav_upload) {
                     // send an intent to active the story upload mode here
                     Toast.makeText(thiscontext, "upload your own story", Toast.LENGTH_LONG).show();
@@ -113,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void gotoOverViewActivity(View view){
         Intent intent = new Intent(this, MapsActivity.class );
+        startActivity(intent);
+    }
+    public void gotoFollowActivity(View view){
+        Intent intent=new Intent(this,MapsFollowActivity.class);
         startActivity(intent);
     }
     public void gotoDataBaseDevelopActivity(View view){

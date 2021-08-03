@@ -1,10 +1,16 @@
 package com.company.watsloo;
 
-import androidx.fragment.app.FragmentActivity;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentActivity;
+
+import com.company.watsloo.data.DataOperation;
+import com.company.watsloo.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -12,7 +18,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.company.watsloo.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
@@ -23,12 +28,20 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,GoogleMap.OnInfoWindowClickListener{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
+        , GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener
+        , GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+
+    private final String snippet="Click here to get more info";
+    private final LatLng defaultLatlng = new LatLng(43.4723, -80.5449);
+    private static final int DEFAULT_ZOOM = 15;
+
+    private HashMap<String, double[]> spotsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +54,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        spotsMap=new HashMap<String, double[]>();
     }
-    private void drawCampusOutline(){
-        try{
-            ArrayList latlngs=new ArrayList();
-            ArrayList nums=new ArrayList();
-            InputStream is =getResources().openRawResource(R.raw.coordinates);
+
+    private void drawCampusOutline() {
+        try {
+            ArrayList latlngs = new ArrayList();
+            ArrayList nums = new ArrayList();
+            InputStream is = getResources().openRawResource(R.raw.coordinates);
             InputStreamReader isr;
             isr = new InputStreamReader(is, StandardCharsets.UTF_8);
 
@@ -58,17 +74,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             bfr.close();
             isr.close();
 
-            for(int i=0;i<nums.size()/2;i++){
-                Double lng=(Double)nums.get(2*i),lat=(Double)nums.get(2*i+1);
-                if(lng==0&&lat==0){ //start a new polygon
+            for (int i = 0; i < nums.size() / 2; i++) {
+                Double lng = (Double) nums.get(2 * i), lat = (Double) nums.get(2 * i + 1);
+                if (lng == 0 && lat == 0) { //start a new polygon
                     Polygon polygon1 = mMap.addPolygon(new PolygonOptions()
                             .clickable(true)
                             .addAll(latlngs)
                             .addHole(latlngs));
                     latlngs.clear();
-                }
-                else{ //add latlng to current polygon
-                    latlngs.add(new LatLng(lat,lng));
+                } else { //add latlng to current polygon
+                    latlngs.add(new LatLng(lat, lng));
                 }
             }
 
@@ -78,6 +93,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
     }
+
+    private void setupMap(){
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+
+        mMap.setOnMarkerClickListener(this::onMarkerClick);
+        mMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
+
+        mMap.setOnMapLongClickListener(this::onMapLongClick);
+    }
+    private void getSpots(){
+        // 先从firebase读出所有数据存到spots.json
+        DataOperation.readInfoFromFirebase(MapsActivity.this);
+
+        // 把spots.json的数据读到str中
+        String str = DataOperation.readFileFromInternalStorage(MapsActivity.this, "spots.json");
+        // 过滤掉未审核，彩蛋以及不需要的数据，保存到hashmap中
+        spotsMap = (HashMap<String, double[]>) DataOperation.stringToSpotsMap(str);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void showSpots(){
+        spotsMap.forEach((key,value)->{
+            LatLng tempPos=new LatLng(value[0],value[1]);
+            mMap.addMarker(new MarkerOptions().position(tempPos).title(key).snippet(snippet));
+        });
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatlng,DEFAULT_ZOOM));
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -87,32 +133,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         drawCampusOutline();
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setZoomGesturesEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-
-        mMap.setOnMarkerClickListener(this::onMarkerClick);
-        mMap.setOnInfoWindowClickListener(this::onInfoWindowClick);
-        // Add a marker in Waterloo and move the camera
-        LatLng loo = new LatLng(43.4723,-80.5449);
-        LatLng ECE_Hall=new LatLng(43.468866,-80.541278);
-        LatLng Egg_Fountain=new LatLng(43.471778869628906,-80.54332733154297);
-        LatLng Physics_Building=new LatLng(43.4705810546875,43.4705810546875);
-        LatLng qnc=new LatLng(43.47111892700195,-80.54422760009766);
-
-        Marker loo_mark=mMap.addMarker(new MarkerOptions().position(loo).title("Marker in Loo").snippet("Click here to get more info"));
-        mMap.addMarker(new MarkerOptions().position(ECE_Hall).title("ECE Hall").snippet("Click here to get more info"));
-        mMap.addMarker(new MarkerOptions().position(Egg_Fountain).title("Egg Fountain").snippet("Click here to get more info"));
-        mMap.addMarker(new MarkerOptions().position(Physics_Building).title("Physics Building").snippet("Click here to get more info"));
-        mMap.addMarker(new MarkerOptions().position(qnc).title("QNC").snippet("Click here to get more info"));
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loo,15));
+        setupMap();
+        getSpots();
+        showSpots();
     }
 
     @Override
@@ -126,6 +154,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent;
         intent=new Intent(MapsActivity.this,SpotActivity.class);
         intent.putExtra("title",marker.getTitle());
+        intent.putExtra("latitude",marker.getPosition().latitude);
+        intent.putExtra("longitude",marker.getPosition().longitude);
         startActivity(intent);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Map Type")
+                .setMessage("Do you want to change the map type to?")
+                .setNeutralButton("Hybrid", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    }
+                })
+                .setPositiveButton("Satellite", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    }
+                })
+                .setNegativeButton("Normal", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    }
+                });
+        builder.show();
     }
 }
