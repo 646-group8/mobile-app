@@ -12,6 +12,8 @@ import android.widget.Button;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
+import com.company.watsloo.data.ItemWithContactInfo;
+import com.company.watsloo.data.ItemWithEmail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,29 +31,35 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         // for firebase test, ignore
         buttonUpload = findViewById(R.id.button_upload);
 
+        // ===== Upload example 1 : item WITHOUT email =====
         List<String> stories = new ArrayList<>();
-        stories.add("banal story 1");
-        stories.add("banal story 2");
-        stories.add("banal story 3");
-        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
-                "A hall in UWaterloo", stories);
+        stories.add("story 11");
+        stories.add("story 22");
 
         Resources res = getResources();
         Bitmap bmp1 = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_text_light_normal_background);
         Bitmap bmp2 = BitmapFactory.decodeResource(res, R.drawable.common_full_open_on_phone);
+        List<Bitmap> bitmaps = new ArrayList<>();
+        bitmaps.add(bmp1);
+        bitmaps.add(bmp2);
 
+        Item itemWithoutEmail = new Item("Badmiton Center", 40.468866, -90.541278,
+                "A hall in UWaterloo", stories, bitmaps);
+
+
+        // ===== Upload example 2 : item with email =====
+        Item itemWrapee = new Item("Tennis Center", 40.468866, -90.541278,
+                "A hall in UWaterloo", stories, bitmaps);
+        ItemWithContactInfo itemWithEmail =
+                new ItemWithEmail(itemWrapee, "myEmailAddress@google.com");
+
+
+        // upload
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                testItem1.addItem(DataBaseDevelopActivity.this);
-                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
-
-                try {
-                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
-                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
-                } catch (IOException e) {
-                    // exception handling
-                }
+                itemWithoutEmail.addItem(DataBaseDevelopActivity.this);
+                itemWithEmail.addItem(DataBaseDevelopActivity.this);
             }
         });
     }

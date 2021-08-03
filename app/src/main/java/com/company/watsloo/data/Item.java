@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,16 @@ public class Item implements ItemInterface {
         this.description = description;
         this.stories = stories;
         bitmaps = new ArrayList<>();
+    }
+
+    public Item(String name, double latitude, double longitude, String description,
+                List<String> stories, List<Bitmap> bitmaps) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.stories = stories;
+        this.bitmaps = bitmaps;
     }
 
     @Override
@@ -91,6 +102,16 @@ public class Item implements ItemInterface {
         DataOperation.addSingleField(context, itemRef, "description", getDescription());
         DataOperation.addSingleField(context, itemRef, "isAudited", false);
         DataOperation.addSingleField(context, itemRef, "isEasterEgg", false);
+
+        if (!getBitmaps().isEmpty()) {
+            for (Bitmap bitmap : bitmaps) {
+                try {
+                    DataOperation.addBitmap(context, getName(), bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         if (!getStories().isEmpty()) {
             DataOperation.addStories(context, getName(), getStories());
