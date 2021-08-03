@@ -32,8 +32,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.company.watsloo.adapter_pattern.DataUploadAdapter;
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
+import com.company.watsloo.data.ItemWithContactInfo;
+import com.company.watsloo.data.ItemWithEmail;
 import com.company.watsloo.strategy_pattern.client.GPSUpdateWithGPSValueClient;
 import com.company.watsloo.strategy_pattern.client.GPSUpdateWithIntentClient;
 import com.company.watsloo.strategy_pattern.client.GPSUpdateWithPictureEXIFClient;
@@ -261,21 +264,21 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         startActivityForResult(pickfromAlbum,SELECT_PHOTOT_FROM_ALBUM);
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        currentPhotoPath = image.getAbsolutePath();
+//        return image;
+//    }
 
     private File getPhotoFile(String file_name) throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -317,6 +320,12 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         float fLat = Float.parseFloat(strLat);
         float fLog = Float.parseFloat(strLog);
 
+        DataUploadAdapter adapter = new DataUploadAdapter(strName,strLat,strLog,strDisc,strStory,myBitmap,strEmail);
+        adapter.ItemUpload(this);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// The following code was be remove after we applied the adapter design pattern
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //        List<String> stories = new ArrayList<>();
 //        stories.add(strStory);

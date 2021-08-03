@@ -7,12 +7,12 @@ public class UpdateGPSWithIntent implements UpdateGPSBehavior{
     private String mylat;
     private String mylon;
 
-    public UpdateGPSWithIntent(String intent_lat, String intent_lon){
-
-
-            mylat = intent_lat;
-            mylon = intent_lon;
-        }
+//    public UpdateGPSWithIntent(String intent_lat, String intent_lon){
+//
+//
+//            mylat = intent_lat;
+//            mylon = intent_lon;
+//        }
 
     public UpdateGPSWithIntent(Intent intent){
 
