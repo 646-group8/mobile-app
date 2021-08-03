@@ -56,7 +56,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     Button albumBtn, cameraBtn, submitBtn;
     ImageView imageView;
     Bitmap myBitmap;
-    EditText textView_lat, textView_lon, textView_name, textView_discription, textView_email;
+    EditText textView_lat, textView_lon, textView_name, textView_discription, textView_email, textView_story;
     private final static int SELECT_PHOTOT_FROM_ALBUM = 250;
     private final static int REQUEST_IMAGE_CAPTURE   = 520;
     private final static int REQUEST_FULL_CAMERA_IMAGE   = 100;
@@ -90,6 +90,7 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         textView_name = findViewById(R.id.editTextTextNewPlaceName);
         textView_discription = findViewById(R.id.eidtTextPlaceDes);
         textView_email = findViewById(R.id.editTextTextEmailAddress);
+        textView_story = findViewById(R.id.eidtTextPlaceStory);
 
         checkAndRequestPermissions();
 
@@ -308,25 +309,26 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         String strLat = textView_lat.getText().toString();
         String strLog = textView_lon.getText().toString();
         String strName = textView_name.getText().toString();
-        String strStory = textView_discription.getText().toString();
+        String strDisc = textView_discription.getText().toString();
         String strEmail = textView_email.getText().toString();
+        String strStory = textView_story.getText().toString();
 
         float fLat = Float.parseFloat(strLat);
         float fLog = Float.parseFloat(strLog);
 
 
-        List<String> stories = new ArrayList<>();
-        stories.add(strStory);
-        Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
-        Resources res = getResources();
-        Bitmap bmp1 = myBitmap;
-        DataOperation.addItem(this, testItem1);
-        DataOperation.addStories(this, strName, stories);
-        try{
-        DataOperation.addBitmap(this, strName, bmp1);}
-        catch (IOException e){
-
-        }
+//        List<String> stories = new ArrayList<>();
+//        stories.add(strStory);
+//        Item testItem1 = new Item(strName, fLat, fLog, strName, stories);
+//        Resources res = getResources();
+//        Bitmap bmp1 = myBitmap;
+//        DataOperation.addItem(this, testItem1);
+//        DataOperation.addStories(this, strName, stories);
+//        try{
+//        DataOperation.addBitmap(this, strName, bmp1);}
+//        catch (IOException e){
+//
+//        }
     }
 
     // update GPS information on the Screen

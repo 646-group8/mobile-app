@@ -32,8 +32,8 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         stories.add("banal story 1");
         stories.add("banal story 2");
         stories.add("banal story 3");
-        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
-                "A hall in UWaterloo", stories);
+//        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
+//                "A hall in UWaterloo", stories);
 
         Resources res = getResources();
         Bitmap bmp1 = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_text_light_normal_background);
@@ -42,15 +42,15 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataOperation.addItem(DataBaseDevelopActivity.this, testItem1);
-                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
-
-                try {
-                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
-                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
-                } catch (IOException e) {
-                    // exception handling
-                }
+//                DataOperation.addItem(DataBaseDevelopActivity.this, testItem1);
+//                DataOperation.addStories(DataBaseDevelopActivity.this, "Hagey Hall", stories);
+//
+//                try {
+//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp1);
+//                    DataOperation.addBitmap(DataBaseDevelopActivity.this, "Hagey Hall", bmp2);
+//                } catch (IOException e) {
+//                    // exception handling
+//                }
             }
         });
     }

@@ -48,23 +48,26 @@
             android:text="GPS Lon"
             android:gravity="center"/>
     </LinearLayout>
+
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_margin="10dp"
+        android:layout_weight="1"
         android:hint="Please input your email here"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/editTextTextNewPlaceName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_margin="10dp"
+        android:layout_weight="1"
         android:hint="Please input the name of this place here"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/eidtTextPlaceDes"
@@ -72,8 +75,18 @@
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:layout_weight="4"
-        android:hint="Please input your Description here"
-        android:inputType="textMultiLine" />
+        android:hint="Please put a discription of this place"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/eidtTextPlaceStory"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="8"
+        android:hint="Please input your Story here"
+        android:inputType="textMultiLine"
+        android:textSize="12sp" />
 
 
 
@@ -88,7 +101,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:textSize="5pt"
-            android:text="Album SELECTION" />
+            android:text="Upload Picture form Album" />
 
 <!--        <Button-->
 <!--            android:onClick="takePicture"-->
@@ -108,7 +121,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:textSize="5pt"
-            android:text="CAMERA Full_Img" />
+            android:text="Take Picture with CAMERA" />
 
 
     </LinearLayout>
@@ -121,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="Submit"
+        android:text="Submit this Sotry"
 
 
 
