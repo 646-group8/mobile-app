@@ -33,8 +33,8 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         stories.add("banal story 1");
         stories.add("banal story 2");
         stories.add("banal story 3");
-//        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
-//                "A hall in UWaterloo", stories);
+        Item testItem1 = new Item("Hagey Hall", 43.468866, -80.541278,
+                "A hall in UWaterloo", stories);
 
         Resources res = getResources();
         Bitmap bmp1 = BitmapFactory.decodeResource(res, R.drawable.common_google_signin_btn_text_light_normal_background);
