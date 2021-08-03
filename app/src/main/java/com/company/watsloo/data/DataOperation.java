@@ -20,10 +20,20 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public class DataOperation {
@@ -174,37 +184,180 @@ public class DataOperation {
         downloadManager.enqueue(request);
     }
 
-    public static void readPosData() {
+    public static void readInfoFromFirebase(Context context) {
+        List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
+
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
                     Position ps = ds.getValue(Position.class);
-                    System.out.println(ps);
+                    JSONObject jo = new JSONObject();
+
+                    try {
+                        jo.put("name", ds.getKey());
+                        jo.put("description", ps.description);
+                        jo.put("latitude", ps.latitude);
+                        jo.put("longitude", ps.longitude);
+                        jo.put("isAudited", ps.isAudited);
+                        jo.put("isEasterEgg", ps.isEasterEgg);
+                        jo.put("images", ps.images);
+                        jo.put("stories", ps.stories);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    jsonObjectList.add(jo);
                 }
+                writeFileOnInternalStorage(context, "spots.json", jsonObjectList.toString());
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
 
             }
+
         });
     }
 
-    public static void readDataByName(String name, String property) {
-        DatabaseReference ref = dbRef.child(name);
-        ref.child(property).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    System.out.println(ds.getValue());
+    public static void writeFileOnInternalStorage(Context context, String filename, String data) {
+        File dir = new File(context.getFilesDir(), "offline");
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+
+        try {
+            File file = new File(dir, filename);
+            FileWriter writer = new FileWriter(file);
+            writer.append(data);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String readFileFromInternalStorage(Context context, String filename) {
+        StringBuffer data = new StringBuffer();
+
+        File dir = new File(context.getFilesDir(), "offline");
+
+        try {
+            File file = new File(dir, filename);
+            FileReader reader = new FileReader(file);
+
+            int ch;
+            while ((ch = reader.read()) != -1) {
+                data.append((char) ch);
+            }
+
+            reader.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return data.toString();
+    }
+
+    // return audited data's hashmap
+    public static Map<String, double[]> stringToSpotsMap(String data) {
+        Map<String, double[]> res = new HashMap<>();
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                boolean isAudited = jsonObject.getBoolean("isAudited");
+                boolean isEasterEgg = jsonObject.getBoolean("isEasterEgg");
+
+                if (isAudited && !isEasterEgg) {
+                    double[] pos = new double[2];
+                    pos[0] = jsonObject.getDouble("latitude");
+                    pos[1] = jsonObject.getDouble("longitude");
+                    res.put(jsonObject.getString("name"), pos);
                 }
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
+        return res;
+    }
 
+    // return easter eggs' hashmap
+    public static Map<String, double[]> stringToEggsMap(String data) {
+        Map<String, double[]> res = new HashMap<>();
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                boolean isAudited = jsonObject.getBoolean("isAudited");
+                boolean isEasterEgg = jsonObject.getBoolean("isEasterEgg");
+
+                if (isAudited && isEasterEgg) {
+                    double[] pos = new double[2];
+                    pos[0] = jsonObject.getDouble("latitude");
+                    pos[1] = jsonObject.getDouble("longitude");
+                    res.put(jsonObject.getString("name"), pos);
+                }
             }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
+    // return data based on name
+    public static JSONObject stringToDetails(String data, String name) {
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("name").equals(name)) {
+                    return jsonObject;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // return data based on name+story key
+    public static JSONObject stringToStory(String data, String name) {
+
+        JSONObject res = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString("name").equals(name)) {
+                    String stories = jsonObject.getString("stories");
+                    String images = jsonObject.getString("images");
+
+                    stories = stories.substring(1, stories.length() - 1);
+                    String[] storiesList = stories.split(",");
+                    images = images.substring(1, images.length() - 1);
+                    String[] imagesList = images.split(",");
+
+                    Random r = new Random();
+                    int imageRand = r.nextInt(imagesList.length - 1);
+                    int storyRand = r.nextInt(storiesList.length - 1);
+
+                    res.put("name", name);
+                    res.put("image", imagesList[imageRand].split("=")[1]);
+                    res.put("story", storiesList[storyRand]);
+
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 }
