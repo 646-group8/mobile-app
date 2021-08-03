@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,8 @@ import android.widget.Toast;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
+import com.company.watsloo.strategy_pattern.client.GPSUpdateWithGPSValueClient;
+import com.company.watsloo.strategy_pattern.client.GPSUpdateWithIntentClient;
 import com.company.watsloo.strategy_pattern.client.GPSUpdateWithPictureEXIFClient;
 import com.company.watsloo.strategy_pattern.client.GPSUpdatreManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -75,6 +79,8 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     private String currentLat = "None";
     private String currentLon = "None";
     private Intent incomingIntent;
+    private Context mycontext;
+    private boolean ShouldReadFromIntent = false;
 
     //Google's API for Location Services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -86,6 +92,12 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_new_place);
+        this.mycontext = this;
+        this.incomingIntent = getIntent();
+        if (incomingIntent.getStringExtra("requestCode")!=null && incomingIntent.getStringExtra("requestCode").equals("READ_GPS_FROM_MAP")){
+            ShouldReadFromIntent = true;
+        }
+
 
         // initialize all the btns, and editText, and imageView;
         imageView = findViewById(R.id.newPlaceImageView);
@@ -106,9 +118,10 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(1000*5);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-//        prepareGPSconfiguration();
 
-        updateGPS();
+        prepareGPSconfiguration();
+
+//        updateGPS();
     }
 
 
@@ -153,6 +166,12 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                 myBitmap = imageBitmap;
                 imageView.setImageBitmap(imageBitmap); // get the bitmap of the picture, and set the image above
                 ExifInterface exifInterface = new ExifInterface(inputStream);
+                // If the intent has GPS inforamtion already, we do not need to obtain from Google API:
+                // If the user come to this page from a MAP Icon, then we use the GPS information from the Map Icon;
+                if (ShouldReadFromIntent){
+                    GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithIntentClient(textView_lat,textView_lon,incomingIntent);
+                    return;
+                }
                 GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithPictureEXIFClient(textView_lat,textView_lon,exifInterface);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // The following code was be remove after we applied the strategy design pattern
@@ -340,12 +359,19 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
     }
 
     // Get the current GPS information and save them in two private strings for latter use
+    // The purpose of this function is to get the current GPS information, and save them as two string
     private void prepareGPSconfiguration(){
-        //get permissions from the user to track GPS
-        //get the current lcoaiton from the fused client
-        //update the text view
+        // get the current location from Intent or from the the fused client
+        // update the text view
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // If the intent has GPS inforamtion already, we do not need to obtain from Google API:
+        if (ShouldReadFromIntent){
+            GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithIntentClient(textView_lat,textView_lon,incomingIntent);
+            return;
+        }
+
+        // If the intent has not GPS information already, we need to obtain from the Google API:
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED ){
             // if have the permission for both GPS and Camera already
@@ -355,13 +381,19 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
                     if (location ==null ){
                         currentLat = "No GPS information found";
                         currentLon = "No GPS information found";
-                    }else{
-                        textView_lat.setText(String.valueOf(location.getLatitude()));
-                        textView_lon.setText(String.valueOf(location.getLongitude()));}
+                    }else {
+                        currentLat = String.valueOf(location.getLatitude());
+                        currentLon = String.valueOf(location.getLongitude());
+                        Toast.makeText(mycontext,"GPS Obtained", Toast.LENGTH_SHORT).show();
+                        GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithGPSValueClient(textView_lat,textView_lon,currentLat,currentLon);
+                    }
                 }
             });
+
         }else{
             // if we do not have GPS permission, we are going to ask for it
+            currentLat = "Please give GPS Permission";
+            currentLon = "Please give GPS Permission";
         }
     }
 
@@ -376,8 +408,11 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
 
         switch (requestCode){
             case PERMISSION_GRANTED:
-                if (sum==0)
-                    updateGPS();
+                if (sum==0) {
+//                    updateGPS();
+                    prepareGPSconfiguration();
+                    GPSUpdatreManager gpsUpdatreManager = new GPSUpdateWithGPSValueClient(textView_lat, textView_lon, currentLat, currentLon);
+                }
                 else
                     Toast.makeText(this,"This app requires the permissions to be granted in order to work properly", Toast.LENGTH_SHORT).show();
                 break;
@@ -410,6 +445,24 @@ public class UploadNewPlaceActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
+    protected class LoadStuffTask extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void ... params) // your background thread calls this method
+        {
+            // do your loading
+            prepareGPSconfiguration();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute (Void v) // this method is called when doInBackground returns - once it finishes, the AsyncTask will have its status set to FINISHED
+        {
+            // up to you if you want to do anything here
+        }
+    };
 
 
 

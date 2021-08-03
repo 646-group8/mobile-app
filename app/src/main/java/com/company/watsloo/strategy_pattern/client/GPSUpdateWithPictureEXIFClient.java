@@ -21,8 +21,8 @@ public class GPSUpdateWithPictureEXIFClient extends GPSUpdatreManager{
         this.setUpdateGPSBehavior(updateGPSBehavior);
         // perform the action
         this.performUpdateGPS();
-        this.getMyLatTextview().setTextColor(Color.YELLOW);
-        this.getMyLonTextview().setTextColor(Color.YELLOW);
+        this.getMyLatTextview().setTextColor(Color.DKGRAY);
+        this.getMyLonTextview().setTextColor(Color.DKGRAY);
 
     }
 }

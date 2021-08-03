@@ -7,14 +7,20 @@ public class UpdateGPSWithIntent implements UpdateGPSBehavior{
     private String mylat;
     private String mylon;
 
-    public UpdateGPSWithIntent(Intent intent){
-        myGPSKey = intent.getStringExtra("requestCode");
-        if (myGPSKey!=null && myGPSKey.equals("READ_GPS_FROM_MAP")){
+    public UpdateGPSWithIntent(String intent_lat, String intent_lon){
 
-            mylat = intent.getStringExtra("lat");
-            mylon = intent.getStringExtra("log");
+
+            mylat = intent_lat;
+            mylon = intent_lon;
         }
+
+    public UpdateGPSWithIntent(Intent intent){
+
+
+        mylat = intent.getStringExtra("lat");
+        mylon = intent.getStringExtra("log");
     }
+
     @Override
     public String updateLat() {
         // implements the update latitude with the pre-saved latitude information from intent

@@ -23,7 +23,7 @@ public class GPSUpdateWithGPSValueClient extends GPSUpdatreManager {
         this.setUpdateGPSBehavior(updateGPSBehavior);
         // perform the action
         this.performUpdateGPS();
-        this.getMyLatTextview().setTextColor(Color.RED);
-        this.getMyLonTextview().setTextColor(Color.RED);
+        this.getMyLatTextview().setTextColor(Color.BLUE);
+        this.getMyLonTextview().setTextColor(Color.BLUE);
     }
 }
