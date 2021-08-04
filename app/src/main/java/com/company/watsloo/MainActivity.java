@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else if (id == R.id.nav_databasetest){
-                    gotoDataBaseDevelopActivity(null);
+                    gotoInstructions(null);
                 }
 
                 return true;
@@ -109,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void gotoUploadNewPlaceActivity(View view){
         Intent intent = new Intent(this, UploadNewPlaceActivity.class );
+        startActivity(intent);
+    }
+
+    public void gotoInstructions(View view){
+        Intent intent = new Intent(this, Instructions.class );
         startActivity(intent);
     }
 
