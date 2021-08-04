@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.company.watsloo.data.DataOperation;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
@@ -34,6 +38,18 @@ public class DetailActivity extends AppCompatActivity {
         String spot_title_str = bundle.getString("spot_title");
         String story_title_str = bundle.getString("story_title");
         story_title.setText(story_title_str);
+
+        // read data from firebase
+//        String data = DataOperation.readFileFromInternalStorage(DetailActivity.this, "spots.json");
+//        JSONObject obj1 = DataOperation.stringToStory(data, "Hagey Hall");
+//        System.out.println(obj1);
+
+        story_detail.setText("   hhhhhh ");
+        story_title.setTextSize(20);
+        story_image.setImageResource(R.drawable.eggfountain);
+
+
+
         switch(story_title_str) {
             case "Put coins in the fountain and make a wish, you will get good mark in your final exams":
                 story_detail.setText("    ");

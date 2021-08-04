@@ -16,7 +16,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.company.watsloo.data.DataOperation;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 
@@ -25,8 +32,18 @@ public class SpotActivity extends AppCompatActivity {
     private TextView spot_title;
     private TextView spot_content;
     private ListView listView;
+    private String description;
+    private Double latitude;
+    private Double longitude;
+//    private JSONArray stories;
+//    private JSONObject images;
+    private String stories;
+    private String images;
+    private String[] title_story;
+    private String[] storiesList;
+    private String[] imagesList;
     ArrayList<String> story_list = new ArrayList<>();
-
+    ArrayList<String> title_list = new ArrayList<>();
     ArrayList<HashMap<String, Object>> dataList = new ArrayList<HashMap<String, Object>>();
 
 
@@ -39,44 +56,58 @@ public class SpotActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         spot_title.setText(title);
 
-        int[] image_story = new int[]{R.drawable.eggfountain, R.drawable.physics, R.drawable.qnc,
-        };
-        String[] title_story = new String[image_story.length];
-        switch (title) {
-            case "Egg Fountain":
-                title_story[0] = "Put coins in the fountain and make a wish, you will get good mark in your final exams";
-                title_story[1] = "Hold a party here";
-                for(int i = 0; i < 2; i++) {
-                    HashMap<String, Object> map = new HashMap<String, Object>();
-                    map.put("text", title_story[i]);
-                    map.put("pic", image_story[0]);
-                    dataList.add(map);
-                }
 
-                break;
+        String data = DataOperation.readFileFromInternalStorage(SpotActivity.this, "spots.json");
 
-            case "Physics Building":
-                title_story[0] = "An Admirable Person";
+        JSONObject obj = DataOperation.stringToDetails(data, title);
+        System.out.println(obj.toString());
+        JSONObject obj1 = DataOperation.stringToStory(data, title);
+        System.out.println(obj1);
+        try {
+            description  = obj.getString("description");
+            latitude = obj.getDouble("latitude");
+            longitude = obj.getDouble("longitude");
+//            stories = obj.getJSONArray("stories");
+//            for(int i = 0; i < stories.length(); i++) {
+//                story_list.add(stories.getString(i));
+//                title_list.add(stories.getString(i).substring(0, 20));
+//            }
+//            images = obj.getJSONObject("images");
+            stories = obj.getString("stories");
+            images = obj.getString("images");
 
-                HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("text", title_story[0]);
-                map.put("pic", image_story[1]);
-                dataList.add(map);
-                break;
-
-            case "QNC":
-                title_story[0] = "The Birthday of QNC";
-
-                map = new HashMap<String, Object>();
-                map.put("text", title_story[0]);
-                map.put("pic", image_story[2]);
-                dataList.add(map);
-
-                break;
-
-
+            stories = stories.substring(1, stories.length() - 1);
+            storiesList = stories.split(",");
+            images = images.substring(1, images.length() - 1);
+            imagesList = images.split(",");
 
         }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(storiesList != null && storiesList.length > 0) {
+            for(int i = 1; i <= storiesList.length; i++) {
+                String s = "Story " + i;
+                title_list.add(s);
+            }
+        }
+
+
+        title_story = title_list.toArray(new String[title_list.size()]);
+
+
+        int[] image_story = new int[]{R.drawable.eggfountain, R.drawable.physics, R.drawable.qnc,
+        };
+        for(int i = 0; i < title_list.size(); i++) {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("text", title_list.get(i));
+            map.put("pic", image_story[0]);
+            dataList.add(map);
+        }
+
+
+
+
 
         listView = findViewById(R.id.spotList);
         SimpleAdapter adapter = new SimpleAdapter(this, dataList,
@@ -85,11 +116,6 @@ public class SpotActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
-//        story_list.add("story1");
-//        story_list.add("story2");
-//        listView = findViewById(R.id.spotList);
-//        ArrayAdapter<String> adapter = new ArrayAdapter( this,R.layout.support_simple_spinner_dropdown_item,story_list);
-//        listView.setAdapter(adapter);
 
         // story's detail -> DetailActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,7 +125,7 @@ public class SpotActivity extends AppCompatActivity {
                 Intent intentDetail = new Intent();
                 intentDetail.setClass(SpotActivity.this, DetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("story_title", title_story[position]);
+                bundle.putString("story_title", storiesList[position]);
                 bundle.putString("spot_title", title);
 
                 intentDetail.putExtras(bundle);
@@ -113,9 +139,15 @@ public class SpotActivity extends AppCompatActivity {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentSubmit = new Intent();
-                intentSubmit.setClass(SpotActivity.this, UploadNewPlaceActivity.class);
-                startActivity(intentSubmit);
+                Intent intent = new Intent(SpotActivity.this, UploadNewPlaceActivity.class);
+                intent.putExtra("lat",String.valueOf(latitude));
+                intent.putExtra("log",String.valueOf(longitude));
+                intent.putExtra("title",title);
+                intent.putExtra("requestCode", "READ_GPS_FROM_MAP");
+                startActivity(intent);
+//                Intent intentSubmit = new Intent();
+//                intentSubmit.setClass(SpotActivity.this, UploadNewPlaceActivity.class);
+//                startActivity(intentSubmit);
             }
         });
         //back to home page
@@ -123,9 +155,10 @@ public class SpotActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentBack = new Intent();
-                intentBack.setClass(SpotActivity.this, MapsActivity.class);
-                startActivity(intentBack);
+//                Intent intentBack = new Intent();
+//                intentBack.setClass(SpotActivity.this, MapsActivity.class);
+//                startActivity(intentBack);
+                finish();
 
             }
         });

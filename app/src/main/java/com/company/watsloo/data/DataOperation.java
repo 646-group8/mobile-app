@@ -30,7 +30,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -201,7 +203,20 @@ public class DataOperation {
                         jo.put("longitude", ps.longitude);
                         jo.put("isAudited", ps.isAudited);
                         jo.put("isEasterEgg", ps.isEasterEgg);
+//                        JSONObject images = new JSONObject();
+//                        Iterator iter = ps.images.entrySet().iterator();
+//                        while(iter.hasNext()) {
+//                            Map.Entry entry = (Map.Entry) iter.next();
+//                            Object key = entry.getKey();
+//                            Object value = entry.getValue();
+//                            images.put((String)key, (String)value);
+//                        }
                         jo.put("images", ps.images);
+
+//                        JSONArray stories = new JSONArray();
+//                        for(int i = 0; i < ps.getStoryNum(ps.stories); i++) {
+//                            stories.put(ps.stories.get(i));
+//                        }
                         jo.put("stories", ps.stories);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -337,17 +352,33 @@ public class DataOperation {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 if (jsonObject.getString("name").equals(name)) {
-                    String stories = jsonObject.getString("stories");
-                    String images = jsonObject.getString("images");
+                    String stories = "";
+                    if(jsonObject.has("stories")) {
+                        stories = jsonObject.getString("stories");
+                    }
+                    String images = "";
+                    if(jsonObject.has("images")) {
+                        images = jsonObject.getString("images");
+                    }
 
-                    stories = stories.substring(1, stories.length() - 1);
+                    if(stories.length() > 1){
+                        stories = stories.substring(1, stories.length() - 1);
+                    }
                     String[] storiesList = stories.split(",");
-                    images = images.substring(1, images.length() - 1);
+
+                    if(images.length() > 1) {
+                        images = images.substring(1, images.length() - 1);
+                    }
                     String[] imagesList = images.split(",");
 
                     Random r = new Random();
-                    int imageRand = r.nextInt(imagesList.length - 1);
-                    int storyRand = r.nextInt(storiesList.length - 1);
+                    int imageRand = 0, storyRand = 0;
+                    if(imagesList.length - 1 > 0) {
+                        imageRand = r.nextInt(imagesList.length - 1);
+                    }
+                    if(storiesList.length - 1 > 0) {
+                        storyRand = r.nextInt(storiesList.length - 1);
+                    }
 
                     res.put("name", name);
                     res.put("image", imagesList[imageRand].split("=")[1]);
