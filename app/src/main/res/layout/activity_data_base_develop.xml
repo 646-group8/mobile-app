@@ -29,4 +29,25 @@
       app:layout_constraintTop_toBottomOf="@+id/button_upload"
       android:onClick="testButforMengYao"/>
 
+  <TextView
+      android:id="@+id/textView1231"
+      android:layout_width="212dp"
+      android:layout_height="159dp"
+      android:text="TextView"
+      app:layout_constraintBottom_toTopOf="@+id/button_upload"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <Button
+      android:id="@+id/button2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:onClick="testforReadDataBase"
+      android:text="FireBase ReadButton"
+      app:layout_constraintBottom_toTopOf="@+id/button"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/button_upload" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
