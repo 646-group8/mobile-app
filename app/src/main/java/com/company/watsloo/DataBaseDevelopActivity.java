@@ -9,24 +9,30 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.company.watsloo.data.DataOperation;
 import com.company.watsloo.data.Item;
 import com.company.watsloo.data.ItemWithContactInfo;
 import com.company.watsloo.data.ItemWithEmail;
 
-import java.io.IOException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseDevelopActivity extends AppCompatActivity {
 
     private Button buttonUpload;
+    private TextView myText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_base_develop);
+
+        myText = findViewById(R.id.textView1231);
+
 
         // for firebase test, ignore
         buttonUpload = findViewById(R.id.button_upload);
@@ -71,5 +77,16 @@ public class DataBaseDevelopActivity extends AppCompatActivity {
         intent.putExtra("title","Title_from_MY");
         intent.putExtra("requestCode", "READ_GPS_FROM_MAP");
         startActivity(intent);
+    }
+
+    public void testforReadDataBase(View view){
+        // 先从firebase读出所有数据存到spots.json
+        DataOperation.readInfoFromFirebase(DataBaseDevelopActivity.this);
+        String data = DataOperation.readFileFromInternalStorage(DataBaseDevelopActivity.this, "spots.json");
+
+        JSONObject obj = DataOperation.stringToDetails(data, "Hagey Hall");
+        myText.setText(obj.toString());
+
+
     }
 }
