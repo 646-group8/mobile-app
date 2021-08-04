@@ -89,18 +89,26 @@ public class DataOperation {
         baos.flush();
         baos.close();
 
+        // store the image in the Storage of firebase
         UploadTask uploadTask = bitmapRef.putBytes(data);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                String filepath = taskSnapshot.getMetadata().getPath();
-                dbRef.child(itemName).child("images").child(randomId.toString()).setValue(filepath)
-                        .addOnFailureListener(new OnFailureListener() {
+                StorageReference myStorageRef = FirebaseStorage.getInstance().getReference(bitmapName);
+                myStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context,
-                                "Fail to store the image!", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Uri uri) {
+                        String filepath = uri.toString();
+
+                        dbRef.child(itemName).child("images").child(randomId.toString())
+                                .setValue(filepath).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(context,
+                                                "Fail to store the image url into realtime database!",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 });
             }
