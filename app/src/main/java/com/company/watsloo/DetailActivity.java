@@ -55,8 +55,6 @@ public class DetailActivity extends AppCompatActivity {
 //        String data = DataOperation.readFileFromInternalStorage(DetailActivity.this, "spots.json");
 //        JSONObject obj1 = DataOperation.stringToStory(data, spot_title_str);
 
-        //String url = "https://console.firebase.google.com/u/0/project/watsloo-d5415/storage/watsloo-d5415.appspot.com/files/~2FE2%20Engineering%20Building";
-        //String url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.appfutura.com%2Fuploads%2Fblog%2Fposts%2Fcache%2F315e11c3bcae87162047127bd2a78a271511173794_393_222.jpg&refer=http%3A%2F%2Fwww.appfutura.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630683319&t=b144235024dda80a9e83e50932f126bd";
         Glide.with(DetailActivity.this)
                 .load(image_url)
                 .into(story_image);

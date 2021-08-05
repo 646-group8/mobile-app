@@ -89,9 +89,10 @@ public class SpotActivity extends AppCompatActivity {
             images = obj.getString("images");
 
             stories = stories.substring(1, stories.length() - 1);
-            storiesList = stories.split(",");
+            storiesList = stories.split("\\$+,|\\$+]");
             images = images.substring(1, images.length() - 1);
             imagesList = images.split(",");
+
 
         }
         catch (JSONException e) {
@@ -106,9 +107,15 @@ public class SpotActivity extends AppCompatActivity {
         }
         System.out.println(Arrays.toString(imagesList));
         for(int i = 0; i < imagesList.length; i++) {
-            String imageUrl = imagesList[i].split("=")[1];
-            image_list.add(imageUrl);
-            System.out.println(imageUrl);
+            String[] urlList = imagesList[i].split("=");
+            StringBuilder sb = new StringBuilder();
+            for (int k = 1; k < urlList.length; k++) {
+                sb.append(urlList[k]);
+                sb.append("=");
+            }
+            sb.substring(0, sb.length() - 1);
+            image_list.add(sb.toString());
+            System.out.println(sb.toString());
         }
 
         title_image = image_list.toArray(new String[image_list.size()]);
