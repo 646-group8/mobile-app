@@ -360,36 +360,31 @@ public class DataOperation {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 if (jsonObject.getString("name").equals(name)) {
-                    String stories = "";
-                    if(jsonObject.has("stories")) {
-                        stories = jsonObject.getString("stories");
-                    }
-                    String images = "";
-                    if(jsonObject.has("images")) {
-                        images = jsonObject.getString("images");
-                    }
+                    String stories = jsonObject.getString("stories");
+                    String images = jsonObject.getString("images");
 
-                    if(stories.length() > 1){
-                        stories = stories.substring(1, stories.length() - 1);
-                    }
-                    String[] storiesList = stories.split(",");
+                    System.out.println(images);
 
-                    if(images.length() > 1) {
-                        images = images.substring(1, images.length() - 1);
-                    }
+                    stories = stories.substring(1, stories.length());
+                    String[] storiesList = stories.split("\\$+,|\\$+]");
+
+                    images = images.substring(1, images.length() - 1);
                     String[] imagesList = images.split(",");
 
                     Random r = new Random();
-                    int imageRand = 0, storyRand = 0;
-                    if(imagesList.length - 1 > 0) {
-                        imageRand = r.nextInt(imagesList.length - 1);
+                    int imageRand = r.nextInt(imagesList.length - 1);
+                    int storyRand = r.nextInt(storiesList.length - 1);
+
+                    String[] urlList = imagesList[imageRand].split("=");
+                    StringBuilder sb = new StringBuilder();
+                    for (int k = 1; k < urlList.length; k++) {
+                        sb.append(urlList[k]);
+                        sb.append("=");
                     }
-                    if(storiesList.length - 1 > 0) {
-                        storyRand = r.nextInt(storiesList.length - 1);
-                    }
+                    sb.substring(0, sb.length() - 1);
 
                     res.put("name", name);
-                    res.put("image", imagesList[imageRand].split("=")[1]);
+                    res.put("image", sb.toString());
                     res.put("story", storiesList[storyRand]);
 
                 }
