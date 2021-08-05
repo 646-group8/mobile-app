@@ -20,6 +20,7 @@ public class DataUploadAdapter {
         double longtitude = Double.parseDouble(log);
         List<String> storyList = new ArrayList<>();
         List<Bitmap> bitmapList = new ArrayList<>();
+        story +="$$$$$";
         storyList.add(story);
         bitmapList.add(bitmap);
         Item itemWrapee = new Item(name, latitude,longtitude,discription, storyList,bitmapList);
