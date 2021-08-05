@@ -174,6 +174,7 @@ public class SpotActivity extends AppCompatActivity {
                 intent.putExtra("log",String.valueOf(longitude));
                 intent.putExtra("title",title);
                 intent.putExtra("requestCode", "READ_GPS_FROM_MAP");
+                intent.putExtra("desc", description);
                 startActivity(intent);
 //                Intent intentSubmit = new Intent();
 //                intentSubmit.setClass(SpotActivity.this, UploadNewPlaceActivity.class);
