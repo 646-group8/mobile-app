@@ -3,35 +3,48 @@ package com.company.watsloo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
+
+import android.transition.Transition;
+import android.view.SurfaceControl;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.company.watsloo.data.DataOperation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+
 
 public class SpotActivity extends AppCompatActivity {
 
     private TextView spot_title;
     private TextView spot_content;
     private ListView listView;
+    private ImageView story_image;
     private String description;
     private Double latitude;
     private Double longitude;
@@ -58,7 +71,13 @@ public class SpotActivity extends AppCompatActivity {
         spot_title.setText(title);
 
         getSpotData(title);
-        getSpotStory();
+        try {
+            getSpotStory();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         listviewAdapter();
         toDetailAct(title);
         toUploadAct(title);
@@ -74,7 +93,7 @@ public class SpotActivity extends AppCompatActivity {
     }
 
 
-    private void getSpotStory() {
+    private void getSpotStory() throws ExecutionException, InterruptedException {
         try {
             description  = obj.getString("description");
             latitude = obj.getDouble("latitude");
@@ -121,6 +140,18 @@ public class SpotActivity extends AppCompatActivity {
         title_image = image_list.toArray(new String[image_list.size()]);
 
 
+        story_image = findViewById(R.id.story_image);
+
+
+//        Glide.with(SpotActivity.this).asBitmap().load(tmp)
+//                .into(new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(Bitmap bitmap, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
+//                story_image.setImageBitmap(bitmap);
+//
+//            }
+//
+//        });
 
         int[] image_story = new int[]{R.drawable.uwaterloologo,
         };
@@ -128,12 +159,13 @@ public class SpotActivity extends AppCompatActivity {
         for(int i = 0; i < title_list.size(); i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("text", title_list.get(i));
-            if(image_list.size() > i) {
-                map.put("pic",image_story[0]);
-            }
-            else {
-                map.put("pic", image_story[0]);
-            }
+            map.put("pic",image_story[0]);
+//            if(image_list.size() > i) {
+//                map.put("pic",image_story[0]);
+//            }
+//            else {
+//                map.put("pic", image_story[0]);
+//            }
 
             dataList.add(map);
         }
@@ -147,6 +179,7 @@ public class SpotActivity extends AppCompatActivity {
                 new int[]{R.id.story_title, R.id.story_image});
 
         listView.setAdapter(adapter);
+
     }
 
 
