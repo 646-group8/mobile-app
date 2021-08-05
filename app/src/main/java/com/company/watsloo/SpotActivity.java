@@ -56,9 +56,12 @@ public class SpotActivity extends AppCompatActivity {
     private String[] storiesList;
     private String[] imagesList;
     private JSONObject obj;
+    private int index;
     ArrayList<String> image_list = new ArrayList<>();
     ArrayList<String> title_list = new ArrayList<>();
     ArrayList<HashMap<String, Object>> dataList = new ArrayList<HashMap<String, Object>>();
+    String tmp = "https://pics4.baidu.com/feed/3801213fb80e7bec072fd6f680ee243e9a506b73.jpeg?token=cd8e0f96be6c1654fcf051239b42b8bc";
+
 
 
     @Override
@@ -70,6 +73,7 @@ public class SpotActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         spot_title.setText(title);
 
+        listviewAdapter(index);
         getSpotData(title);
         try {
             getSpotStory();
@@ -78,10 +82,11 @@ public class SpotActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        listviewAdapter();
+
         toDetailAct(title);
         toUploadAct(title);
         backMap();
+
 
     }
 
@@ -134,24 +139,13 @@ public class SpotActivity extends AppCompatActivity {
             }
             sb.substring(0, sb.length() - 1);
             image_list.add(sb.toString());
-            System.out.println(sb.toString());
         }
 
         title_image = image_list.toArray(new String[image_list.size()]);
 
 
-        story_image = findViewById(R.id.story_image);
+        //story_image = findViewById(R.id.story_image);
 
-
-//        Glide.with(SpotActivity.this).asBitmap().load(tmp)
-//                .into(new SimpleTarget<Bitmap>() {
-//            @Override
-//            public void onResourceReady(Bitmap bitmap, com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
-//                story_image.setImageBitmap(bitmap);
-//
-//            }
-//
-//        });
 
         int[] image_story = new int[]{R.drawable.uwaterloologo,
         };
@@ -159,26 +153,46 @@ public class SpotActivity extends AppCompatActivity {
         for(int i = 0; i < title_list.size(); i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("text", title_list.get(i));
-            map.put("pic",image_story[0]);
-//            if(image_list.size() > i) {
-//                map.put("pic",image_story[0]);
-//            }
-//            else {
-//                map.put("pic", image_story[0]);
-//            }
+            index = i;
+            if(image_list.size() > i) {
+                map.put("pic",image_list.get(i));
+            }
+            else {
+                map.put("pic", image_story[0]);
+            }
 
             dataList.add(map);
         }
     }
 
 
-    private void listviewAdapter() {
+    private void listviewAdapter(int i) {
         listView = findViewById(R.id.spotList);
-        SimpleAdapter adapter = new SimpleAdapter(this, dataList,
+//        SimpleAdapter adapter = new SimpleAdapter(this, dataList,
+//                R.layout.fragment_story_list, new String[]{"text", "pic"},
+//                new int[]{R.id.story_title, R.id.story_image});
+//
+//        listView.setAdapter(adapter);
+        SimpleAdapter listAdapter = new SimpleAdapter(SpotActivity.this, dataList,
                 R.layout.fragment_story_list, new String[]{"text", "pic"},
                 new int[]{R.id.story_title, R.id.story_image});
 
-        listView.setAdapter(adapter);
+        listAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+            public boolean setViewValue(View view, Object data,
+                                        String textRepresentation) {
+                // TODO Auto-generated method stub
+                if(view instanceof ImageView){
+                    ImageView view1 = (ImageView) view;
+                    Glide.with(view1.getContext())
+                            .load(image_list.get(i))
+                            .into(view1);
+
+                    return true;
+                }
+                return false;
+            }
+        });
+        listView.setAdapter(listAdapter);
 
     }
 
