@@ -140,7 +140,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawCampusOutline();
         setupMap();
         getSpots();
-        showSpots();
+        // getSpots() 需要读写数据库，然后写txt到手机里，再读回来，
+        // 出于某种 同步还是异步 我不知道的机理，showSpots（） 运行之的时候，getSpots() 还没有返回值
+        // 于是第一次安装 app 的时候 map就不会有marker，
+        // 暴力的解决方式是 让 showspot 等 getSpots 的返回值 等上 300毫秒左右
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showSpots();
+            }
+        },300); // milliseconds: 0.3 seg.
     }
 
     @Override
