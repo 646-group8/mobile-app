@@ -39,10 +39,11 @@ public class SpotActivity extends AppCompatActivity {
 //    private JSONObject images;
     private String stories;
     private String images;
-    private String[] title_story;
+    private String[] title_image;
     private String[] storiesList;
     private String[] imagesList;
-    ArrayList<String> story_list = new ArrayList<>();
+    private JSONObject obj;
+    ArrayList<String> image_list = new ArrayList<>();
     ArrayList<String> title_list = new ArrayList<>();
     ArrayList<HashMap<String, Object>> dataList = new ArrayList<HashMap<String, Object>>();
 
@@ -56,13 +57,24 @@ public class SpotActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         spot_title.setText(title);
 
+        getSpotData(title);
+        getSpotStory();
+        listviewAdapter();
+        toDetailAct(title);
+        toUploadAct(title);
+        backMap();
 
+    }
+
+
+    private void getSpotData(String title) {
         String data = DataOperation.readFileFromInternalStorage(SpotActivity.this, "spots.json");
 
-        JSONObject obj = DataOperation.stringToDetails(data, title);
-        System.out.println(obj.toString());
-        JSONObject obj1 = DataOperation.stringToStory(data, title);
-        System.out.println(obj1);
+        obj = DataOperation.stringToDetails(data, title);
+    }
+
+
+    private void getSpotStory() {
         try {
             description  = obj.getString("description");
             latitude = obj.getDouble("latitude");
@@ -87,36 +99,51 @@ public class SpotActivity extends AppCompatActivity {
         }
         if(storiesList != null && storiesList.length > 0) {
             for(int i = 1; i <= storiesList.length; i++) {
-                String s = "Story " + i;
+                String s = "Story " + i + ":" + storiesList[i - 1].substring(0, 20);
                 title_list.add(s);
+
             }
         }
+        System.out.println(Arrays.toString(imagesList));
+        for(int i = 0; i < imagesList.length; i++) {
+            String imageUrl = imagesList[i].split("=")[1];
+            image_list.add(imageUrl);
+            System.out.println(imageUrl);
+        }
+
+        title_image = image_list.toArray(new String[image_list.size()]);
 
 
-        title_story = title_list.toArray(new String[title_list.size()]);
 
-
-        int[] image_story = new int[]{R.drawable.eggfountain, R.drawable.physics, R.drawable.qnc,
+        int[] image_story = new int[]{R.drawable.uwaterloologo,
         };
+
         for(int i = 0; i < title_list.size(); i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("text", title_list.get(i));
-            map.put("pic", image_story[0]);
+            if(image_list.size() > i) {
+                map.put("pic",image_story[0]);
+            }
+            else {
+                map.put("pic", image_story[0]);
+            }
+
             dataList.add(map);
         }
+    }
 
 
-
-
-
+    private void listviewAdapter() {
         listView = findViewById(R.id.spotList);
         SimpleAdapter adapter = new SimpleAdapter(this, dataList,
                 R.layout.fragment_story_list, new String[]{"text", "pic"},
                 new int[]{R.id.story_title, R.id.story_image});
 
         listView.setAdapter(adapter);
+    }
 
 
+    private void toDetailAct(String title) {
         // story's detail -> DetailActivity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -127,14 +154,17 @@ public class SpotActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("story_title", storiesList[position]);
                 bundle.putString("spot_title", title);
+                bundle.putString("image_url", title_image[position]);
+                System.out.println(imagesList[position]);
 
                 intentDetail.putExtras(bundle);
                 startActivity(intentDetail);
             }
         });
+    }
 
 
-        //button :submit story/take pictures
+    private void toUploadAct(String title) {
         Button buttonSubmit = (Button) this.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,17 +180,20 @@ public class SpotActivity extends AppCompatActivity {
 //                startActivity(intentSubmit);
             }
         });
+    }
+
+
+    private void backMap() {
         //back to home page
         Button buttonBack = (Button) this.findViewById(R.id.buttonBack);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intentBack = new Intent();
-//                intentBack.setClass(SpotActivity.this, MapsActivity.class);
-//                startActivity(intentBack);
                 finish();
 
             }
         });
     }
+
+
 }
