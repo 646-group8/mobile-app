@@ -88,7 +88,7 @@ public class SpotActivity extends AppCompatActivity {
             stories = obj.getString("stories");
             images = obj.getString("images");
 
-            stories = stories.substring(1, stories.length() - 1);
+            stories = stories.substring(1, stories.length());
             storiesList = stories.split("\\$+,|\\$+]");
             images = images.substring(1, images.length() - 1);
             imagesList = images.split(",");
