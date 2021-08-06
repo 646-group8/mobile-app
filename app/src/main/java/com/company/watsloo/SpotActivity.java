@@ -123,7 +123,7 @@ public class SpotActivity extends AppCompatActivity {
         }
         if(storiesList != null && storiesList.length > 0) {
             for(int i = 1; i <= storiesList.length; i++) {
-                String s = "Story " + i + ":" + storiesList[i - 1].substring(0, 20);
+                String s = "Story " + i + ": " + storiesList[i - 1].substring(0, Math.min(75, storiesList[i - 1].length())) + "...";
                 title_list.add(s);
 
             }

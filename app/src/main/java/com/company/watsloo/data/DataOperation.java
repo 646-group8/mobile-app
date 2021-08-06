@@ -57,8 +57,7 @@ public class DataOperation {
                 storiesRef.setValue(existedStories).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(context,
-                                "Succeed to add the item!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Upload Succeeded! Your item will be visible af after we verify it.", Toast.LENGTH_LONG).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
