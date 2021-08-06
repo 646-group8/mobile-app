@@ -1,6 +1,7 @@
 package com.company.watsloo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -42,6 +43,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int DEFAULT_ZOOM = 15;
 
     private HashMap<String, double[]> spotsMap;
+
+    // 把 从FireBase数据库读 的操作放到了 onCreate 之前的method 里执行，这样
+    // 很大概率上来说，onCreate 显示地图的时候，这些地点已经加载好了： https://www.jianshu.com/p/d52960e3f6f2
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        getSpots();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,19 +146,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         drawCampusOutline();
         setupMap();
         getSpots();
+        showSpots();
+
         // getSpots() 需要读写数据库，然后写txt到手机里，再读回来，
         // 出于某种 同步还是异步 我不知道的机理，showSpots（） 运行之的时候，getSpots() 还没有返回值
         // 于是第一次安装 app 的时候 map就不会有marker，
         // 暴力的解决方式是 让 showspot 等 getSpots 的返回值 等上 300毫秒左右
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showSpots();
-            }
-        },300); // milliseconds: 0.3 seg.
+//        new android.os.Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                showSpots();
+//            }
+//        },3000); // milliseconds: 0.3 sed.
     }
 
     @Override

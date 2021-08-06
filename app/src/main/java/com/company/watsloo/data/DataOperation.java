@@ -2,13 +2,18 @@ package com.company.watsloo.data;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.company.watsloo.DetailActivity;
+import com.company.watsloo.MainActivity;
+import com.company.watsloo.MapsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -59,6 +64,12 @@ public class DataOperation {
                     public void onSuccess(Void unused) {
                         Toast.makeText(context,
                                 "Succeed to add the item!", Toast.LENGTH_SHORT).show();
+
+                        // 子硕我在着往main activity 发一个 intent哈，这样成功了我就可以跳转走了 YW
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.putExtra("ON_DATA_SUCCESSFUL_UPLOAD","TURE");
+                        context.startActivity(intent);
+//                        context.startActivityForResult(intent, requestCode);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -41,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_GRANTED = 101;
     private Context mycontext;
 
-
+// The App Icon is used with this license:
+//    Apps, games, desktop apps, etc
+//
+//    Paste this link on the website where your app is available for download or in the description section of the platform or marketplace you’re using.
+//    <div>Icons made by <a href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Check and Ask for GPS, Camera, Media Store Permissions
         checkAndRequestPermissions();
-
+        displayItemUploadedToastMessage();
 
     }
 
@@ -195,6 +199,16 @@ public class MainActivity extends AppCompatActivity {
 
 
                 break;
+        }
+    }
+
+    private void displayItemUploadedToastMessage(){
+        Intent incomingIntent = getIntent();
+//        intent.putExtra("ON_DATA_SUCCESSFUL_UPLOAD","TURE");
+        if (incomingIntent.getStringExtra("ON_DATA_SUCCESSFUL_UPLOAD") !=null &&
+                incomingIntent.getStringExtra("ON_DATA_SUCCESSFUL_UPLOAD").equals("TRUE")){
+            Toast.makeText(mycontext,
+                    "Succeed to add the item!", Toast.LENGTH_SHORT).show();
         }
     }
 }
