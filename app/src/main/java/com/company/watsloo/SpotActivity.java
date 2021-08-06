@@ -56,7 +56,6 @@ public class SpotActivity extends AppCompatActivity {
     private String[] storiesList;
     private String[] imagesList;
     private JSONObject obj;
-    private int index;
     ArrayList<String> image_list = new ArrayList<>();
     ArrayList<String> title_list = new ArrayList<>();
     ArrayList<HashMap<String, Object>> dataList = new ArrayList<HashMap<String, Object>>();
@@ -73,7 +72,7 @@ public class SpotActivity extends AppCompatActivity {
         String title = intent.getStringExtra("title");
         spot_title.setText(title);
 
-        listviewAdapter(index);
+        listviewAdapter();
         getSpotData(title);
         try {
             getSpotStory();
@@ -153,7 +152,6 @@ public class SpotActivity extends AppCompatActivity {
         for(int i = 0; i < title_list.size(); i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("text", title_list.get(i));
-            index = i;
             if(image_list.size() > i) {
                 map.put("pic",image_list.get(i));
             }
@@ -166,7 +164,7 @@ public class SpotActivity extends AppCompatActivity {
     }
 
 
-    private void listviewAdapter(int i) {
+    private void listviewAdapter() {
         listView = findViewById(R.id.spotList);
 //        SimpleAdapter adapter = new SimpleAdapter(this, dataList,
 //                R.layout.fragment_story_list, new String[]{"text", "pic"},
@@ -184,7 +182,7 @@ public class SpotActivity extends AppCompatActivity {
                 if(view instanceof ImageView){
                     ImageView view1 = (ImageView) view;
                     Glide.with(view1.getContext())
-                            .load(image_list.get(i))
+                            .load((String) data)
                             .into(view1);
 
                     return true;
