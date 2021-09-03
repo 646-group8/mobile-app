@@ -24,9 +24,6 @@
 | Project Proposal-2 Pages | May 31   | 0%    |
 | Written Report-6-10 Pages| Aug 02|100%|
 
-<!-- blank line -->
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/watch?v=iYUTU0a3ZKk" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-<!-- blank line -->
+
+[![Alt text](https://z3.ax1x.com/2021/09/03/hcaLgf.jpg)](https://www.youtube.com/watch?v=iYUTU0a3ZKk)
 
