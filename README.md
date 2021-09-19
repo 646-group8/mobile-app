@@ -1,29 +1,22 @@
-# mobile-app
+# WhatsLoo
 
-# [CS 446, CS 646, ECE 452 Course Project 2021 Spring](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/#orals)
+### 1 Brief Description
 
+Our application Watsloo is created to provide a platform for senior students/University staff to share
+their unique stories about University of Waterloo (UW). It can also guide new UW students to
+explore the main campus of UW. With the help of Watsloo, new students can have a sense of the
+life and the culture in UW, and this will make it easier for them to get started with their own journey
+in this amazing campus! In General, Watsloo provides four main functions:
+1) overview to see stories scatter in every corner of the campus;
+2) following mode to discover the amazing stories around you;
+3) reading the detailed description and image to experience the joy and sadness happened in here;
+4) Sharing your unique experience in UW with other students.
 
+### 2 Demo Video
 
-## Due Date for Group Projects:
+Refer to https://github.com/646-group8/design-docs/blob/master/4_Demo%20Description_Watsloo.pdf for detailed demo description.
 
-| Deliverables                                                 | Due Date | Value |
-| ------------------------------------------------------------ | -------- | ----- |
-| [D1: Proposal Documents-7 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable1.pdf) | June 18  | 5%    |
-|[D2: Buddy team's evaluation-2 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable2.pdf)|June 30| 3%|
-|[D3: Prototype Document + Demo-2 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable3.pdf)|July 9|10%|
-|[D4: Arch. Style Example-3 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable4.pdf)|June 16|10%|
-|[D5: Design Pattern Example-3 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable5.pdf)|June 23|10%|
-|[D6: Arch+Design Doc-12 Pages](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable7.pdf)|Aug 4|10%|
-|[D7: Final Report-2Pages + Video](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/deliverables/Deliverable7.pdf)|Aug 6|5%|
-|[Oral Exam](https://cs.uwaterloo.ca/~m2nagapp/courses/CS446/1215/#orals)|Aug9-14|20%|
-
-## Due date for Graduate Project:
-
-| Deliverables             | Due date | Value |
-| ------------------------ | -------- | ----- |
-| Project Proposal-2 Pages | May 31   | 0%    |
-| Written Report-6-10 Pages| Aug 02|100%|
-
+Refer to https://github.com/646-group8/design-docs for other design docs.
 
 [![Alt text](https://z3.ax1x.com/2021/09/03/hcaLgf.jpg)](https://www.youtube.com/watch?v=iYUTU0a3ZKk)
 
